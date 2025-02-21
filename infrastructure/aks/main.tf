@@ -14,7 +14,7 @@ resource "random_integer" "pod_cidr" {
 locals {
   location             =  var.aks_cluster.location
   aks_name             =  var.aks_cluster.name
-  aks_rg_name          = "${local.aks_name}-aks_rg"
+  aks_rg_name          = "${local.aks_name}_rg"
   aks_node_rg_name     = "${local.aks_name}_nodes_rg"
   istio_version        = [ var.aks_cluster.istio.version ]
 }

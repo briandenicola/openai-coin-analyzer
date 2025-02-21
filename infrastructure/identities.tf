@@ -4,13 +4,13 @@ locals {
 
 resource "azurerm_user_assigned_identity" "app_identity" {
   name                = "${local.workload_identity}"
-  resource_group_name = azurerm_resource_group.this.name
-  location            = azurerm_resource_group.this.location
+  resource_group_name = azurerm_resource_group.app.name
+  location            = azurerm_resource_group.app.location
 }
 
 resource "azurerm_federated_identity_credential" "app_identity" {
   name                = "${local.workload_identity}"
-  resource_group_name = azurerm_resource_group.this.name
+  resource_group_name = azurerm_resource_group.app.name
   audience            = ["api://AzureADTokenExchange"]
   issuer              = data.azurerm_kubernetes_cluster.this.oidc_issuer_url
   parent_id           = azurerm_user_assigned_identity.app_identity.id

@@ -96,7 +96,6 @@ resource "azurerm_kubernetes_cluster" "this" {
     load_balancer_sku   = "standard"
     network_data_plane  = "cilium"
     network_policy      = "cilium"
-    outbound_type       = "userAssignedNATGateway"
   }
 
   service_mesh_profile {
