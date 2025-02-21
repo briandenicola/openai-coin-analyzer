@@ -3,6 +3,5 @@ resource "azurerm_cognitive_account" "this" {
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
   kind                = "OpenAI"
-
   sku_name            = "S0"
 }

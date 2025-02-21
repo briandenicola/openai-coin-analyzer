@@ -1,50 +1,60 @@
 resource "azurerm_virtual_network" "this" {
   name                = local.vnet_name
+  address_space       = [local.vnet_cidr]
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
-  address_space       = [ local.vnet_cidr ]
 }
 
-resource "azurerm_subnet" "private-endpoints" {
-  name                  = "private-endpoints"
-  resource_group_name   = azurerm_virtual_network.this.resource_group_name
-  virtual_network_name  = azurerm_virtual_network.this.name
-  address_prefixes      = [ local.pe_subnet_cidr ]
-
-  private_endpoint_network_policies_enabled = true
-}
-
-resource "azurerm_subnet" "kubernetes" {
-  name                  = "nodes"
-  resource_group_name   = azurerm_virtual_network.this.resource_group_name
-  virtual_network_name  = azurerm_virtual_network.this.name
-  address_prefixes      = [ local.k8s_subnet_cidr ]
+resource "azurerm_subnet" "nodes" {
+  name                            = "nodes"
+  resource_group_name             = azurerm_resource_group.this.name
+  virtual_network_name            = azurerm_virtual_network.this.name
+  address_prefixes                = [local.nodes_subnet_cidir]
+  default_outbound_access_enabled = false
 }
 
 resource "azurerm_subnet" "api" {
-  name                 = "api-severver"
-  resource_group_name  = azurerm_resource_group.this.name
-  virtual_network_name = azurerm_virtual_network.this.name
-  address_prefixes     = [ local.api_subnet_cidir ]
-  
+  name                            = "api-server"
+  resource_group_name             = azurerm_resource_group.this.name
+  virtual_network_name            = azurerm_virtual_network.this.name
+  address_prefixes                = [local.api_subnet_cidir]
+ 
   delegation {
     name = "aks-delegation"
 
     service_delegation {
-      name    = "Microsoft.ContainerService/managedClusters"
+      name = "Microsoft.ContainerService/managedClusters"
       actions = [
         "Microsoft.Network/virtualNetworks/subnets/join/action",
-      ]  
+      ]
     }
   }
 }
 
+resource "azurerm_subnet" "pe" {
+  name                            = "private-endpoints"
+  resource_group_name             = azurerm_resource_group.this.name
+  virtual_network_name            = azurerm_virtual_network.this.name
+  address_prefixes                = [local.pe_subnet_cidir]
+  default_outbound_access_enabled = false
+}
+
+resource "azurerm_subnet" "compute" {
+  name                                          = "compute"
+  resource_group_name                           = azurerm_resource_group.this.name
+  virtual_network_name                          = azurerm_virtual_network.this.name
+  address_prefixes                              = [local.compute_subnet_cidir]
+  private_endpoint_network_policies             = "Enabled"
+  private_link_service_network_policies_enabled = false
+  default_outbound_access_enabled               = false
+}
+
 resource "azurerm_subnet" "sql" {
-  name                  = "sql"
-  resource_group_name   = azurerm_virtual_network.this.resource_group_name
-  virtual_network_name  = azurerm_virtual_network.this.name
-  address_prefixes      = [ local.sql_subnet_cidr ]
-  service_endpoints     = ["Microsoft.Storage"]
+  name                            = "sql"
+  resource_group_name             = azurerm_resource_group.this.name
+  virtual_network_name            = azurerm_virtual_network.this.name
+  address_prefixes                = [local.sql_subnet_cidir]
+  default_outbound_access_enabled = false
   delegation {
     name = "fs"
     service_delegation {
@@ -53,6 +63,31 @@ resource "azurerm_subnet" "sql" {
         "Microsoft.Network/virtualNetworks/subnets/join/action",
       ]
     }
-  }
+  }  
 }
 
+resource "azurerm_network_security_group" "this" {
+  name                = "${local.resource_name}-default-nsg"
+  location            = azurerm_resource_group.this.location
+  resource_group_name = azurerm_resource_group.this.name
+}
+
+resource "azurerm_subnet_network_security_group_association" "nodes" {
+  subnet_id                 = azurerm_subnet.nodes.id
+  network_security_group_id = azurerm_network_security_group.this.id
+}
+
+resource "azurerm_subnet_network_security_group_association" "api" {
+  subnet_id                 = azurerm_subnet.api.id
+  network_security_group_id = azurerm_network_security_group.this.id
+}
+
+resource "azurerm_subnet_network_security_group_association" "pe" {
+  subnet_id                 = azurerm_subnet.pe.id
+  network_security_group_id = azurerm_network_security_group.this.id
+}
+
+resource "azurerm_subnet_network_security_group_association" "compute" {
+  subnet_id                 = azurerm_subnet.compute.id
+  network_security_group_id = azurerm_network_security_group.this.id
+}

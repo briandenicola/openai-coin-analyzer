@@ -12,7 +12,7 @@ variable "namespace" {
   default     = "ric-analyzer"
 }
 
-variable "vm_size" {
+variable "node_sku" {
   description = "The SKU for the default node pool"
   default     = "Standard_B4ms"
 }
@@ -36,6 +36,6 @@ variable "postgresql_database_name" {
 }
 
 variable "github_repo_branch" {
-  description = "The branched used for InfrastructureGitOps"
+  description = "The branched used for Infrastructure GitOps"
   default     = "main"
 }

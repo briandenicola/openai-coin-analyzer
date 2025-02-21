@@ -4,12 +4,14 @@ env:
   TITLE: Roman Imperial Coin Analyzer
   HELM_CHART: ric-analyzer
   SKU: "Standard_D4ads_v5"
+  DEFAULT_REGION: "southcentralus"
   COUNT: 2
-  ACR_NAME: bjdcsa
-  ACR_RG: Core_ContainerRepo_RG
-  COMMIT_VERSION: 6b62e6ba3479
   
 tasks:
+  default:
+    cmds:
+    - task --list
+
   up:
     desc: Creates Azure infrastructure and deploys application code
     cmds:
@@ -18,15 +20,16 @@ tasks:
     - terraform init
     - task: apply
     - task: creds
+    - task: build
     - task: deploy
     vars: 
-      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+      REGION: '{{default .DEFAULT_REGION .CLI_ARGS}}'
 
   apply:
     cmds:
     - terraform -chdir=./infrastructure apply -auto-approve -var "region={{.REGION}}" -var "vm_size={{.SKU}}" -var "node_count={{.COUNT}}"  -var "tags={{.TAGS}}" -compact-warnings
     vars: 
-      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+      REGION: '{{default .DEFAULT_REGION .CLI_ARGS}}'
 
   creds:
     desc: Gets credential file for newly created AKS cluster
@@ -38,6 +41,34 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP
       AKS: 
         sh: terraform -chdir=./infrastructure output -raw AKS_CLUSTER_NAME
+
+  build:
+    desc: Builds application via ACR tasks
+    dir: ./src/api
+    cmds:
+    - az acr build -t ric/api:{{.COMMIT_VERSION}} -r {{.ACR_NAME}} .
+    vars:
+      APP_NAME:
+        sh: terraform -chdir=../infrastructure output -raw APP_NAME
+      ACR_NAME:
+        sh: terraform -chdir=../infrastructure output -raw ACR_NAME
+      COMMIT_VERSION:
+        sh: git rev-parse HEAD | cut -c 1-8  
+
+  ui:
+    desc: Deploys the UI code to Azure Static Web Apps
+    dir: ./src/ui
+    cmds:
+    - cmd: swa build -a . -O build -A 'dotnet publish -o build'
+    - cmd: swa deploy --env production --app-location build/wwwroot --deployment-token {{.DEPLOY_TOKEN}}
+      silent: true
+    vars:
+      APP_NAME:
+        sh: terraform -chdir=../infrastructure output -raw APP_NAME
+      SWA: 
+        sh: terraform -chdir=../infrastructure output -raw AZURE_STATIC_WEBAPP_NAME
+      DEPLOY_TOKEN:
+        sh: az staticwebapp secrets list --name {{.SWA}} --query "properties.apiKey" -o tsv
 
   deploy:
     desc: Deploys application via Helm
@@ -58,6 +89,8 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw ARM_TENANT_ID
       APP_INSIGHTS:
         sh: terraform -chdir=./infrastructure output -raw APP_INSIGHTS
+      ACR_NAME:
+        sh: terraform -chdir=./infrastructure output -raw ACR_NAME
 
   down:
     desc: Destroys all Azure resources and cleans up Terraform

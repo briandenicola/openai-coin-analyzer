@@ -1,6 +1,17 @@
+
+resource "azurerm_kubernetes_cluster_extension" "dapr" {
+  depends_on = [
+    azurerm_kubernetes_cluster_extension.flux,
+  ]
+  name              = "dapr"
+  cluster_id        = azurerm_kubernetes_cluster.this.id
+  extension_type    = "microsoft.dapr"
+  release_namespace = "dapr-system"
+}
+
 resource "azurerm_kubernetes_cluster_extension" "flux" {
   depends_on = [
-    azurerm_kubernetes_cluster_node_pool.app_node_pool
+    azapi_update_resource.cluster_updates
   ]
   name           = "flux"
   cluster_id     = azurerm_kubernetes_cluster.this.id
@@ -18,16 +29,16 @@ resource "azurerm_kubernetes_flux_configuration" "flux_config" {
   scope      = "cluster"
 
   git_repository {
-    url                      = local.flux_repository
+    url                      = var.aks_cluster.flux.repository
     reference_type           = "branch"
-    reference_value          = var.github_repo_branch
+    reference_value          = "main"
     timeout_in_seconds       = 600
     sync_interval_in_seconds = 30
   }
 
   kustomizations {
     name = "cluster-config"
-    path = local.app_path
+    path = var.aks_cluster.flux.app_path
 
     timeout_in_seconds         = 600
     sync_interval_in_seconds   = 120
