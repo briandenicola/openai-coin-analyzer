@@ -1,99 +1,55 @@
-﻿using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using OpenTelemetry;
-using OpenTelemetry.Logs;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
-using Spectre.Console;
-#pragma warning disable SKEXP0050
+using Microsoft.EntityFrameworkCore;
+using Microsoft.ApplicationInsights;
 
-var aspireEndpoint = "http://localhost:4317";
-var modelId = "gpt-4-turbo";
-var systemMessage = "You are an expert numismatist with a particular focus on Ancient Roman Imperial Coins with a dry sense of humor. You have been asked to analyze the following coin.";
-var prompt = "What is the inscription on the coin and make a guess on the Emperor depicted? Tell me anything else you can deduce from the coin. It's okay to be wrong. These guys are long dead.";
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
+builder.Services.AddApplicationInsightsTelemetry();
 
-var coin = new Uri("https://github.com/briandenicola/openai-learnings/blob/main/src/ric_analyzer/img/coin-2.png?raw=true");
+var app = builder.Build();
+app.Urls.Add("http://+:5501");
 
-var (endpoint, apiKey) = new Settings().LoadSettings();
+app.MapGet( "/", () =>  $"Hello World! The time now is {DateTime.Now}" );
 
-var resourceBuilder = ResourceBuilder
-    .CreateDefault()
-    .AddService("RomanImperialCoinAnalyzer");
+app.MapGet("/todos", async (TodoDb db) => await db.Todos.ToListAsync());
 
-AppContext.SetSwitch("Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnosticsSensitive", true);
+app.MapGet("/todos/{id}", async (int id, TodoDb db) =>
+    await db.Todos.FindAsync(id)
+        is Todo todo
+            ? Results.Ok(todo)
+            : Results.NotFound()
+);
 
-using var traceProvider = Sdk.CreateTracerProviderBuilder()
-    .SetResourceBuilder(resourceBuilder)
-    .AddSource("Microsoft.SemanticKernel*")
-    .AddOtlpExporter(options => options.Endpoint = new Uri(aspireEndpoint))
-    .Build();
-
-using var meterProvider = Sdk.CreateMeterProviderBuilder()
-    .SetResourceBuilder(resourceBuilder)
-    .AddMeter("Microsoft.SemanticKernel*")
-    .AddConsoleExporter()
-    .AddOtlpExporter(options => options.Endpoint = new Uri(aspireEndpoint))
-    .Build();
-
-using var loggerFactory = LoggerFactory.Create(builder =>
+app.MapPost("/todos", async (Todo todo, TodoDb db) =>
 {
-    builder.AddOpenTelemetry(options =>
-    {
-        options.SetResourceBuilder(resourceBuilder);
-        options.AddConsoleExporter();
-        options.AddOtlpExporter(options => options.Endpoint = new Uri(aspireEndpoint));
-        options.IncludeFormattedMessage = true;
-        options.IncludeScopes = true;
-    });
-    builder.SetMinimumLevel(LogLevel.Information);
+    db.Todos.Add(todo);
+    await db.SaveChangesAsync();
+    return Results.Created($"/todos/{todo.Id}", todo);
 });
 
-var builder = Kernel.CreateBuilder();
-builder.Services.AddSingleton(loggerFactory);
-builder.AddAzureOpenAIChatCompletion(modelId, endpoint, apiKey);
-            
-var kernel = builder.Build();
-
-var chat = kernel.GetRequiredService<IChatCompletionService>();
-var history = new ChatHistory();
-history.AddSystemMessage(systemMessage);
-history.AddUserMessage(prompt);
-
-var  requestSettings = new OpenAIPromptExecutionSettings()
+app.MapPut("/todos/{id}", async (int id, Todo inputTodo, TodoDb db) =>
 {
-    MaxTokens = 4096,    
-};
+    var todo = await db.Todos.FindAsync(id);
 
-var collectionItems= new ChatMessageContentItemCollection
-{
-    new TextContent(prompt),
-    new ImageContent(coin)
-};
-history.AddUserMessage(collectionItems);
+    if (todo is null) return Results.NotFound();
 
-AnsiConsole.Markup("[bold blue]Hello, I am a Roman Imperial Coin Analyzer chatbot. I can help you with analyzing Roman Imperial Coins. Let's start with the coin analysis.[/]");
-AnsiConsole.MarkupInterpolated($"[bold blue]Prompt: {prompt}[/]");
-AnsiConsole.MarkupInterpolated($"[bold blue]Analyzing the following coin image: {coin.AbsoluteUri}[/]\n");
+    todo.Name = inputTodo.Name;
+    todo.IsComplete = inputTodo.IsComplete;
 
-var result = await AnsiConsole.Progress().StartAsync(async ctx => {
-    var task = ctx.AddTask("[green]Analyzing Coin with GPT...[/]");
-
-    while (!task.IsFinished) {
-        task.Increment(1.0);
-        await Task.Delay(1000);
-    }
-
-    var chatResult = await chat.GetChatMessageContentAsync(history, requestSettings, kernel);
-    task.StopTask();
-    return chatResult;
+    await db.SaveChangesAsync();
+    return Results.NoContent();
 });
 
-if( result.Content is not null) {     
-    AnsiConsole.MarkupInterpolated($"[bold yellow]{result.Content}[/]\n\n");                  
-} else {
-    Console.WriteLine("No response from the chatbot.");
+app.Run();
+
+class Todo
+{
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    public bool IsComplete { get; set; }
+}
+
+class TodoDb : DbContext
+{
+    public TodoDb(DbContextOptions<TodoDb> options)  : base(options) { }
+    public DbSet<Todo> Todos => Set<Todo>();
 }

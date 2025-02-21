@@ -1,0 +1,8 @@
+{
+    "UPLOAD_URI": "https://cattle-23364.api.traduire.bjdazure.tech/api/upload?apikey=17c7eb286b354da38699e8175",
+    "STATUS_URI": "https://cattle-23364.api.traduire.bjdazure.tech/api/status/{0}?apikey=17c7eb286b354da38699e8175",
+    "TRANSCRIPT_URI": "https://cattle-23364.api.traduire.bjdazure.tech/api/download/{0}?apikey=17c7eb286b354da38699e8175",
+    "WEB_PUBSUB_URI": "https://cattle-23364-pubsub.webpubsub.azure.com",
+    "WEB_PUBSUB_KEY": "9FNEJWUBLVQsTZ6ePeFiw73Le/HKHWCE0Hb2LOARkls="
+}
+

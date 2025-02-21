@@ -5,6 +5,6 @@ resource "azurerm_resource_group" "this" {
     Application         = var.tags
     DeployedOn          = timestamp()
     AppName             = local.resource_name
-    Tier                = "Azure Kubernetes Service; Container Apps; Static Web App; Azure OpenAI"
+    Tier                = "PostgreSQL; Static Web App; Azure OpenAI"
   }
 }

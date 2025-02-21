@@ -2,13 +2,16 @@ module "cluster" {
   depends_on = [
     module.azure_monitor
   ]
-  source     = "./aks"
-  resource_name = local.resource_name
+  source           = "./aks"
+  resource_name    = local.resource_name
+  sdlc_environment = local.environment_type
+  tags             = var.tags
+  
   aks_cluster = {
-    name = local.aks_name
+    name                 = local.aks_name
     authorized_ip_ranges = ["${chomp(data.http.myip.response_body)}/32"]
-    public_key_openssh = tls_private_key.rsa.public_key_openssh
-    zones = [ "1", "2", "3" ]
+    public_key_openssh   = tls_private_key.rsa.public_key_openssh
+    zones                = ["1", "2", "3"]
     resource_group = {
       name = azurerm_resource_group.this.name
       id   = azurerm_resource_group.this.id

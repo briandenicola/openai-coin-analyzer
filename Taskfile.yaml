@@ -1,71 +1,78 @@
-version: '3'
+version: "3"
 
-env:
+dotenv: 
+  - .env
+
+vars:
   TITLE: Roman Imperial Coin Analyzer
   HELM_CHART: ric-analyzer
-  SKU: "Standard_D4ads_v5"
-  DEFAULT_REGION: "southcentralus"
+  SKU: Standard_D4ads_v5
+  DEFAULT_REGION: canadacentral
   COUNT: 2
-  
+
 tasks:
   default:
     cmds:
-    - task --list
+      - task --list
 
   up:
     desc: Creates Azure infrastructure and deploys application code
     cmds:
-    - terraform workspace new {{.REGION}} || true
-    - terraform workspace select {{.REGION}}
-    - terraform init
-    - task: apply
-    - task: creds
-    - task: build
-    - task: deploy
-    vars: 
-      REGION: '{{default .DEFAULT_REGION .CLI_ARGS}}'
+      - terraform -chdir=./infrastructure workspace new {{.REGION}} || true
+      - terraform -chdir=./infrastructure workspace select {{.REGION}}
+      - terraform -chdir=./infrastructure init
+      - task: apply
+      - task: creds
+      - task: build
+      - task: deploy
+    vars:
+      REGION: "{{default .DEFAULT_REGION .CLI_ARGS}}"
 
   apply:
     cmds:
-    - terraform -chdir=./infrastructure apply -auto-approve -var "region={{.REGION}}" -var "vm_size={{.SKU}}" -var "node_count={{.COUNT}}"  -var "tags={{.TAGS}}" -compact-warnings
-    vars: 
-      REGION: '{{default .DEFAULT_REGION .CLI_ARGS}}'
+      - terraform -chdir=./infrastructure apply -auto-approve  -compact-warnings
+        -var "region={{.REGION}}"
+        -var "node_sku={{.SKU}}"
+        -var "node_count={{.COUNT}}"
+        -var "tags={{.TITLE}}"
+    vars:
+      REGION: "{{default .DEFAULT_REGION .CLI_ARGS}}"
 
   creds:
     desc: Gets credential file for newly created AKS cluster
     cmds:
-    - az aks get-credentials -g {{.RG}} -n {{.AKS}} --overwrite-existing
-    - kubelogin convert-kubeconfig -l azurecli
+      - az aks get-credentials -g {{.RG}} -n {{.AKS}} --overwrite-existing
+      - kubelogin convert-kubeconfig -l azurecli
     vars:
-      RG: 
+      RG:
         sh: terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP
-      AKS: 
+      AKS:
         sh: terraform -chdir=./infrastructure output -raw AKS_CLUSTER_NAME
 
   build:
     desc: Builds application via ACR tasks
     dir: ./src/api
     cmds:
-    - az acr build -t ric/api:{{.COMMIT_VERSION}} -r {{.ACR_NAME}} .
+      - az acr build -t ric/api:{{.COMMIT_VERSION}} -r {{.ACR_NAME}} .
     vars:
       APP_NAME:
         sh: terraform -chdir=../infrastructure output -raw APP_NAME
       ACR_NAME:
         sh: terraform -chdir=../infrastructure output -raw ACR_NAME
       COMMIT_VERSION:
-        sh: git rev-parse HEAD | cut -c 1-8  
+        sh: git rev-parse HEAD | cut -c 1-8
 
   ui:
     desc: Deploys the UI code to Azure Static Web Apps
     dir: ./src/ui
     cmds:
-    - cmd: swa build -a . -O build -A 'dotnet publish -o build'
-    - cmd: swa deploy --env production --app-location build/wwwroot --deployment-token {{.DEPLOY_TOKEN}}
-      silent: true
+      - cmd: swa build -a . -O build -A 'dotnet publish -o build'
+      - cmd: swa deploy --env production --app-location build/wwwroot --deployment-token {{.DEPLOY_TOKEN}}
+        silent: true
     vars:
       APP_NAME:
         sh: terraform -chdir=../infrastructure output -raw APP_NAME
-      SWA: 
+      SWA:
         sh: terraform -chdir=../infrastructure output -raw AZURE_STATIC_WEBAPP_NAME
       DEPLOY_TOKEN:
         sh: az staticwebapp secrets list --name {{.SWA}} --query "properties.apiKey" -o tsv
@@ -73,17 +80,17 @@ tasks:
   deploy:
     desc: Deploys application via Helm
     cmds:
-    - helm upgrade -i {{.HELM_CHART}} 
-        --set ACR_NAME="{{.ACR_NAME}}" 
-        --set COMMIT_VERSION={{.COMMIT_VERSION}} 
-        --set APP_NAME={{.APP_NAME}} 
-        --set ARM_WORKLOAD_APP_ID={{.ARM_WORKLOAD_APP_ID}} 
-        --set ARM_TENANT_ID={{.ARM_TENANT_ID}} 
+      - helm upgrade -i {{.HELM_CHART}}
+        --set ACR_NAME="{{.ACR_NAME}}"
+        --set COMMIT_VERSION={{.COMMIT_VERSION}}
+        --set APP_NAME={{.APP_NAME}}
+        --set ARM_WORKLOAD_APP_ID={{.ARM_WORKLOAD_APP_ID}}
+        --set ARM_TENANT_ID={{.ARM_TENANT_ID}}
         --set APP_INSIGHTS="{{.APP_INSIGHTS}}" ./chart
     vars:
-      APP_NAME: 
+      APP_NAME:
         sh: terraform -chdir=./infrastructure output -raw APP_NAME
-      ARM_WORKLOAD_APP_ID: 
+      ARM_WORKLOAD_APP_ID:
         sh: terraform -chdir=./infrastructure output -raw ARM_WORKLOAD_APP_ID
       ARM_TENANT_ID:
         sh: terraform -chdir=./infrastructure output -raw ARM_TENANT_ID
@@ -95,6 +102,6 @@ tasks:
   down:
     desc: Destroys all Azure resources and cleans up Terraform
     cmds:
-    - az group list --tag Application="{{.TITLE}}"" --query "[].name" -o tsv | xargs -ot -n 1 az group delete -y --no-wait -n || true
-    - cd infrastructure ;
-      rm -rf terraform.tfstate.d .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup .terraform.tfstate.lock.info || true
+      - az group list --tag Application="{{.TITLE}}" --query "[].name" -o tsv | xargs -ot -n 1 az group delete -y --no-wait -n || true
+      - cd infrastructure ;
+        rm -rf terraform.tfstate.d .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup .terraform.tfstate.lock.info || true

@@ -2,6 +2,14 @@ variable "resource_name" {
   description = "The root value to use for naming resources"
 }
 
+variable "tags" {
+  description = "The tags to apply to resources"
+}
+
+variable "sdlc_environment" {
+  description = "The environment to deploy to"
+}
+
 variable "aks_cluster" {
   type = object({
     name                  = string

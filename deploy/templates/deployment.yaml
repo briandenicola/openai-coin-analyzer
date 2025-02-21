@@ -63,3 +63,20 @@ spec:
   - port: 80
     targetPort: 80
   type: {{ .Values.SERVICES.TYPE }}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name:  templateapp-vs
+  namespace: apps
+spec:
+  hosts:
+  -  httpbin.bjdazure.tech
+  gateways:
+  -  aks-istio-ingress/default-bjdazure-tech-gw
+  http:
+  - route:
+    - destination:
+        host: templateapp-svc
+        port:
+          number: 80
