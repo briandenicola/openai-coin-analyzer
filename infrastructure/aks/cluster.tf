@@ -1,5 +1,5 @@
 data "azurerm_kubernetes_service_versions" "current" {
-  location = data.azurerm_resource_group.this.location
+  location = azurerm_resource_group.this.location
 }
 
 locals {
@@ -22,8 +22,8 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   name                         = local.aks_name
-  resource_group_name          = data.azurerm_resource_group.this.name
-  location                     = data.azurerm_resource_group.this.location
+  resource_group_name          = azurerm_resource_group.this.name
+  location                     = azurerm_resource_group.this.location
   node_resource_group          = local.aks_node_rg_name
   kubernetes_version           = var.aks_cluster.version
   dns_prefix                   = local.aks_name
