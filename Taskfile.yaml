@@ -21,7 +21,7 @@ tasks:
       - task --list
 
   up:
-    desc: Creates Azure infrastructure and deploys application code
+    desc: Creates complete Azure environment for {{.TITLE}}
     cmds:
       - terraform -chdir=./infrastructure workspace new {{.REGION}} || true
       - terraform -chdir=./infrastructure workspace select {{.REGION}}
