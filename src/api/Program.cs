@@ -2,17 +2,6 @@ using ric.analyser.api;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.ClearProviders();
-builder.Logging.AddOpenTelemetry(logging =>
-{
-    logging.IncludeScopes = true;
-    logging.AddConsoleExporter();
-    logging.AddOtlpExporter(otlpOptions =>
-    {
-        otlpOptions.Endpoint = new Uri(Constants.OTEL_ENDPOINT);
-    });
-});
-
 builder.WebHost.ConfigureKestrel(opts =>
 {
     opts.ListenAnyIP(9091, o => o.Protocols = HttpProtocols.Http1);
