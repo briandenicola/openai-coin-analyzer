@@ -96,12 +96,12 @@ resource "azurerm_kubernetes_cluster" "this" {
     load_balancer_sku   = "standard"
     network_data_plane  = "cilium"
     network_policy      = "cilium"
-    outbound_type       = "userAssignedNATGateway"
   }
 
   service_mesh_profile {
     mode                             = "Istio"
-    internal_ingress_gateway_enabled = true
+    internal_ingress_gateway_enabled = false
+    external_ingress_gateway_enabled = true
     revisions                        = [var.aks_cluster.istio.version]
   }
 
