@@ -2,9 +2,9 @@ namespace ric.analyzer.api;
 
 public static partial class AppExtensions
 {
-    public static void UploadImage(this WebApplication app)
+    public static void AddUploadImageHandler(this WebApplication app)
     {
-        app.MapPost("/upload", async (HttpRequest request) =>
+        app.MapPost("/analyze", async (HttpRequest request) =>
         {
             if (!request.HasFormContentType || !request.Form.Files.Any())
             {

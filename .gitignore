@@ -11,6 +11,13 @@ infrastructure/terraform.tfstate
 infrastructure/terraform.tfstate.backup
 infrastructure/variables.tfvars
 infrastructure/terraform.tfstate.d/
+infrastructure/simple/.terraform/
+infrastructure/simple/.terraform.tfstate.lock.info
+infrastructure/simple/.terraform.lock.hcl
+infrastructure/simple/terraform.tfstate
+infrastructure/simple/terraform.tfstate.backup
+infrastructure/simple/variables.tfvars
+infrastructure/simple/terraform.tfstate.d/
 
 # User-specific files
 *.rsuser

@@ -7,8 +7,13 @@ vars:
   TITLE: Roman Imperial Coin Analyzer
   HELM_CHART: ric-analyzer
   SKU: Standard_D4ads_v5
-  DEFAULT_REGION: canadacentral
+  DEFAULT_REGION: "westus"
   COUNT: 2
+
+includes:
+  local:
+    taskfile: ./Taskfile.local.yaml
+    internal: false
 
 tasks:
   default:

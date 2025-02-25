@@ -3,7 +3,7 @@ module "cluster" {
     azurerm_nat_gateway.this,
     module.azure_monitor
   ]
-  source           = "./aks"
+  source           = "./modules/aks"
   resource_name    = local.resource_name
   sdlc_environment = local.environment_type
   tags             = var.tags

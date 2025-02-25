@@ -9,7 +9,6 @@ locals {
   static_webapp_name     = "${local.resource_name}-ui"
   static_webapp_location = "centralus"
   sql_name               = "${local.resource_name}-sql"
-  openai_name            = "${local.resource_name}-openai"
   app_path               = "./cluster-config"
   flux_repository        = "https://github.com/briandenicola/openai-coin-analyzer"
   environment_type       = "dev"

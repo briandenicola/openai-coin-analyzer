@@ -41,7 +41,9 @@ builder.Services.AddHealthChecks();
 var app = builder.Build();
 app.MapPrometheusScrapingEndpoint().RequireHost("*:9091");
 app.MapHealthChecks("/healthz");
-app.MapControllers();
+app.AddDefaultRoute();
+app.AddUploadImageHandler();
+app.AddGetResultsHandler();
 
 app.Logger.LogInformation($"{builder.Environment.ApplicationName} - App Run");
 app.Run();
