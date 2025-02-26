@@ -10,7 +10,7 @@ module "cluster" {
   
   aks_cluster = {
     name                 = local.aks_name
-    authorized_ip_ranges = ["${chomp(data.http.myip.response_body)}/32"]
+    authorized_ip_ranges = [local.home_ip_address]
     public_key_openssh   = tls_private_key.rsa.public_key_openssh
     zones                = ["1", "2", "3"]
     resource_group = {

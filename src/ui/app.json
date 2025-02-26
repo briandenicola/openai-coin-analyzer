@@ -17,6 +17,12 @@
         "backgroundColor": "#ffffff"
       }
     },
+    "expo": {
+      "jsEngine": "hermes",
+      "ios": {
+        "jsEngine": "jsc"
+      }
+    },
     "web": {
       "bundler": "metro",
       "output": "static",

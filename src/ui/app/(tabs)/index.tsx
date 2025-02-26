@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Button, Image, StyleSheet, ActivityIndicator } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import Constants from "expo-constants";
 
 export default function App() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -35,7 +36,7 @@ export default function App() {
     });
 
     try {
-      const response = await fetch("https://api.example.com/analyze", {
+      const response = await fetch(process.env.EXPO_PUBLIC_API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",

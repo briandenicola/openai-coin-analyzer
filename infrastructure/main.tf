@@ -1,6 +1,7 @@
 locals {
   resource_name          = "${random_pet.this.id}-${random_id.this.dec}"
   aks_name               = "${local.resource_name}-aks"
+  aoai_name              = "${local.resource_name}-openai"
   apim_name              = "${local.resource_name}-apim"
   vnet_name              = "${local.resource_name}-vnet"
   acr_name               = "${replace(local.resource_name, "-", "")}acr"
@@ -19,4 +20,6 @@ locals {
 
   kubernetes_version      = "1.30"
   istio_version           = "asm-1-23"
+
+  home_ip_address        = "${chomp(data.http.myip.response_body)}/32" 
 }
