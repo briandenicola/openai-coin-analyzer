@@ -8,7 +8,7 @@ TBD
 - [X] Simple React Front End 
 - [X] ACR Container Build Task
 - [ ] Deployment to SWA
-- [ ] Deployment to AKS
+- [X] Deployment to AKS
 - [ ] End to End Testing
 - [X] DevContainers
 - [ ] Architecture Diagram
