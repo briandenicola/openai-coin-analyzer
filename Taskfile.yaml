@@ -9,6 +9,7 @@ vars:
   SKU: Standard_D4ads_v5
   DEFAULT_REGION: candacentral
   DEFAULT_DOMAIN: bjdazure.tech
+  APP_URL: api.ric.{{.DEFAULT_DOMAIN}}
   COUNT: 2
 
 includes:
@@ -70,14 +71,17 @@ tasks:
     desc: Builds and Deploys the UI code to Azure Static Web Apps
     dir: ./src/ui
     cmds:
-      - cmd: npx expo export --platform web
+      - echo EXPO_PUBLIC_API_URL={{.APIM_GATEWAY}} > .env
+      - npx expo export --platform web
       - cmd: swa deploy --env production --app-location dist --deployment-token {{.DEPLOY_TOKEN}}
         silent: true
     vars:
       SWA:
-        sh: terraform -chdir=../infrastructure output -raw AZURE_STATIC_WEBAPP_NAME
+        sh: terraform -chdir=../../infrastructure output -raw AZURE_STATIC_WEBAPP_NAME
       DEPLOY_TOKEN:
         sh: az staticwebapp secrets list --name {{.SWA}} --query "properties.apiKey" -o tsv
+      APIM_GATEWAY:
+        sh: terraform -chdir=../../infrastructure output -raw APIM_GATEWAY        
 
   deploy:
     desc: Deploys application via Helm
@@ -86,7 +90,6 @@ tasks:
         --set ACR.NAME="{{.ACR_NAME}}.azurecr.io"
         --set APP.VERSION={{.COMMIT_VERSION}}
         --set APP.TAG_NAME={{.TAG_NAME}}
-        --set APP.URL="api.ric.{{.DEFAULT_DOMAIN}}"
         --set WORKLOAD_ID.NAME={{.WORKLOAD_ID_NAME}}
         --set WORKLOAD_ID.CLIENT_ID={{.WORKLOAD_CLIENT_ID}}
         --set WORKLOAD_ID.TENANT_ID={{.WORKLOAD_TENANT_ID}}
@@ -105,7 +108,46 @@ tasks:
       ACR_NAME:
         sh: terraform -chdir=./infrastructure output -raw ACR_NAME
       COMMIT_VERSION:
-        sh: git rev-parse HEAD | cut -c 1-8        
+        sh: git rev-parse HEAD | cut -c 1-8 
+
+  apim:
+    desc: Gets the IP Address of the Istio Gateway
+    dir: ./scripts
+    cmds:
+    - cmd: echo -e '➡️\033[1m\e[38;5;45mThe Azure APIM Backend should point to {{.IP}}'
+      silent: true
+    vars:
+      IP: 
+        sh: kubectl --namespace aks-istio-ingress get service aks-istio-ingressgateway-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+
+  hubble:
+    desc: Install Hubble Dashboard for Network Observability 
+    dir: ./scripts
+    cmds:
+    - bash ./hubble-certs.sh
+    - kubectl apply -f ../cluster-config/hubble/
+    - kubectl get pods -o wide -n kube-system -l k8s-app=hubble-relay
+    - cmd: echo; 
+        echo -e 'Next. Run the following commands:' &&
+        echo -e '\t➡️\033[1m\e[38;5;45mkubectl port-forward -n kube-system svc/hubble-relay --address 127.0.0.1 4245:443 &' &&
+        echo -e '\t➡️\033[1m\e[38;5;45mkubectl -n kube-system port-forward svc/hubble-ui 12000:80 &' &&
+        echo -e '\t➡️\033[1m\e[38;5;45mhubble observe --pod $(kubectl get pods -o wide -n kube-system -l k8s-app=hubble-relay -o=jsonpath='{.items[0].metadata.name}')'
+      silent: true
+
+  status:
+    desc: Gets the overall status of the cluster
+    cmds:
+    - kubectl get nodes -o wide -L kubernetes.azure.com/node-image-version
+    - kubectl -n kube-system get pods
+    - kubectl -n aks-istio-ingress get pods,services,deployments,gateway
+    - kubectl -n aks-istio-system get pods,services,deployments
+    - kubectl -n ric get pods,services,deployments,virtualservice
+    - flux get all
+
+  restart:
+    desc: Performs a rollout restart on all deployments in eshop namespace
+    cmds:
+    - kubectl -n ric rollout restart deploy
 
   down:
     desc: Destroys all Azure resources and cleans up Terraform

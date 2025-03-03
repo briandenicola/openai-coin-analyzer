@@ -59,7 +59,7 @@ metadata:
   namespace: {{ .Values.APP.NAMESPACE }}
 spec:
   hosts:
-  -  {{ .Values.APP.URL }}
+  -  "*"
   gateways:
   -  {{ .Values.ISTIO.GATEWAY }}
   http:

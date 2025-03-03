@@ -47,3 +47,14 @@ output "APP_INSIGHTS" {
     value = module.azure_monitor.APP_INSIGHTS_CONNECTION_STRING
     sensitive = true
 }
+
+output "AZURE_STATIC_WEBAPP_NAME" {
+    value = azurerm_static_web_app.this.name
+    sensitive = false
+}
+
+
+output "APIM_GATEWAY" {
+    value = azurerm_api_management.this.gateway_url
+    sensitive = false
+}
