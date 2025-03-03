@@ -9,7 +9,7 @@ module "cluster" {
   
   aks_cluster = {
     name                 = local.aks_name
-    authorized_ip_ranges = local.home_ip_address
+    authorized_ip_ranges = "${local.home_ip_address}/32"
     public_key_openssh   = tls_private_key.rsa.public_key_openssh
     zones                = ["1", "2", "3"]
     resource_group = {

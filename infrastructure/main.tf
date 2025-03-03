@@ -18,8 +18,8 @@ locals {
   compute_subnet_cidir = cidrsubnet(local.vnet_cidr, 8, 4)
   sql_subnet_cidir     = cidrsubnet(local.vnet_cidr, 8, 10)
 
-  kubernetes_version = "1.30"
-  istio_version      = "asm-1-23"
+  kubernetes_version    = "1.30"
+  istio_version         = "asm-1-23"
 
-  home_ip_address = "${chomp(data.http.myip.response_body)}/32"
+  home_ip_address       = chomp(data.http.myip.response_body)
 }
