@@ -1,13 +1,14 @@
   apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: templateapp
-  namespace: {{ .Values.NAMESPACE }}
+  name: {{ .Values.APP.NAME }}
+  namespace: {{ .Values.APP.NAMESPACE }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: templateapp
+      app: {{ .Values.APP.NAME }}
+      name: {{ .Values.APP.TAG_NAME }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -17,7 +18,8 @@ spec:
   template:
     metadata:
       labels:
-        app: templateapp
+        app: {{ .Values.APP.NAME }}
+        name: {{ .Values.APP.TAG_NAME }}
     spec:
       serviceAccountName: {{ .Values.WORKLOAD_ID.NAME }}
       securityContext:
@@ -28,8 +30,8 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-      - name: templateapp
-        image:  {{ print .Values.ACR_NAME "/" .Values.APP_NAME ":" .Values.GIT_COMMIT_VERSION }} 
+      - name: {{ .Values.APP.NAME }}
+        image:  {{ print .Values.ACR.NAME "/" .Values.APP.NAMESPACE "/" .Values.APP.NAME ":" .Values.APP.VERSION }} 
         imagePullPolicy: Always
         securityContext:
           runAsNonRoot: true
@@ -44,39 +46,34 @@ spec:
           requests:
             memory: "128Mi"
             cpu: "0.5"
-      tolerations:
-      - key: "app"
-        operator: "Equal"
-        value: "ric"
-        effect: "NoSchedule"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: templateapp-svc
-  namespace: {{ .Values.NAMESPACE }}
-  {{ .Values.SERVICES.ANNOTATIONS }}
+  name: {{ print .Values.APP.NAME "-svc" }}
+  namespace: {{ .Values.APP.NAMESPACE }}
 spec:
   selector:
-    app: templateapp
+    app: {{ .Values.APP.NAME }}
+    name: {{ .Values.APP.TAG_NAME }}
   ports:
   - port: 80
-    targetPort: 80
-  type: {{ .Values.SERVICES.TYPE }}
+    targetPort: {{ .Values.APP.PORT }}
+  type: ClusterIP
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name:  templateapp-vs
-  namespace: apps
+  name:  {{ print .Values.APP.NAME "-vs" }}
+  namespace: {{ .Values.APP.NAMESPACE }}
 spec:
   hosts:
-  -  httpbin.bjdazure.tech
+  -  {{ .Values.APP.URL }}
   gateways:
-  -  aks-istio-ingress/default-bjdazure-tech-gw
+  -  {{ .Values.ISTIO.GATEWAY }}
   http:
   - route:
     - destination:
-        host: templateapp-svc
+        host: {{ print .Values.APP.NAME "-svc" }}
         port:
           number: 80

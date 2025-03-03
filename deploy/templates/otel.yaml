@@ -1,13 +1,8 @@
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ .Values.NAMESPACES.OTEL }}
----
-apiVersion: v1
 kind: Service
 metadata:
   name: otel-collector
-  namespace: {{ .Values.NAMESPACES.OTEL }}
+  namespace: {{ .Values.OTEL.NAMESPACE }}
   labels:
     component: otel-collector
 spec:
@@ -27,7 +22,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: otel-collector
-  namespace: {{ .Values.NAMESPACES.OTEL }}
+  namespace: {{ .Values.OTEL.NAMESPACE }}
   labels:
     app: opentelemetry
     component: otel-collector
@@ -84,7 +79,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: otel-collector-config
-  namespace: {{ .Values.NAMESPACES.OTEL }}
+  namespace: {{ .Values.OTEL.NAMESPACE }}
 data:
   otel-collector-config.yaml: |
     receivers:

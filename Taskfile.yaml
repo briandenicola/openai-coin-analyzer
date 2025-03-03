@@ -8,6 +8,7 @@ vars:
   HELM_CHART: ric-analyzer
   SKU: Standard_D4ads_v5
   DEFAULT_REGION: "westus"
+  DEFAULT_DOMAIN: "bjdazure.tech"
   COUNT: 2
 
 includes:
@@ -58,21 +59,19 @@ tasks:
     desc: Builds application via ACR tasks
     dir: ./src/api
     cmds:
-      - az acr build -t ric/api:{{.COMMIT_VERSION}} -r {{.ACR_NAME}} .
+      - az acr build -t ric/analyzer-api:{{.COMMIT_VERSION}} -r {{.ACR_NAME}} .
     vars:
-      APP_NAME:
-        sh: terraform -chdir=../infrastructure output -raw APP_NAME
       ACR_NAME:
-        sh: terraform -chdir=../infrastructure output -raw ACR_NAME
+        sh: terraform -chdir=../../infrastructure output -raw ACR_NAME
       COMMIT_VERSION:
         sh: git rev-parse HEAD | cut -c 1-8
 
   ui:
-    desc: Deploys the UI code to Azure Static Web Apps
+    desc: Builds and Deploys the UI code to Azure Static Web Apps
     dir: ./src/ui
     cmds:
-      - cmd: swa build -a . -O build -A 'dotnet publish -o build'
-      - cmd: swa deploy --env production --app-location build/wwwroot --deployment-token {{.DEPLOY_TOKEN}}
+      - cmd: swa build -a . -O build
+      - cmd: swa deploy --env production --app-location build --deployment-token {{.DEPLOY_TOKEN}}
         silent: true
     vars:
       APP_NAME:
@@ -86,19 +85,24 @@ tasks:
     desc: Deploys application via Helm
     cmds:
       - helm upgrade -i {{.HELM_CHART}}
-        --set ACR_NAME="{{.ACR_NAME}}"
-        --set COMMIT_VERSION={{.COMMIT_VERSION}}
-        --set APP_NAME={{.APP_NAME}}
-        --set ARM_WORKLOAD_APP_ID={{.ARM_WORKLOAD_APP_ID}}
-        --set ARM_TENANT_ID={{.ARM_TENANT_ID}}
-        --set APP_INSIGHTS="{{.APP_INSIGHTS}}" ./chart
+        --set ACR.NAME="{{.ACR_NAME}}"
+        --set APP.VERSION={{.COMMIT_VERSION}}
+        --set APP.TAG_NAME={{.TAG_NAME}}
+        --set APP.URL="api.ric.{{.DEFAULT_DOMAIN}}"
+        --set WORKLOAD_ID.NAME={{.WORKLOAD_ID_NAME}}
+        --set WORKLOAD_ID.CLIENT_ID={{.WORKLOAD_CLIENT_ID}}
+        --set WORKLOAD_ID.TENANT_ID={{.WORKLOAD_TENANT_ID}}
+        --set WORKLOAD_ID.NAME={{.ARM_WORKLOAD_APP_NAME}}
+        --set APP_INSIGHTS.CONNECTION_STRING="{{.APP_INSIGHTS}}" ./deploy
     vars:
-      APP_NAME:
+      TAG_NAME:
         sh: terraform -chdir=./infrastructure output -raw APP_NAME
-      ARM_WORKLOAD_APP_ID:
-        sh: terraform -chdir=./infrastructure output -raw ARM_WORKLOAD_APP_ID
-      ARM_TENANT_ID:
-        sh: terraform -chdir=./infrastructure output -raw ARM_TENANT_ID
+      WORKLOAD_ID_NAME:
+        sh: terraform -chdir=./infrastructure output -raw WORKLOAD_ID_NAME        
+      WORKLOAD_CLIENT_ID:
+        sh: terraform -chdir=./infrastructure output -raw WORKLOAD_CLIENT_ID
+      WORKLOAD_TENANT_ID:
+        sh: terraform -chdir=./infrastructure output -raw WORKLOAD_TENANT_ID
       APP_INSIGHTS:
         sh: terraform -chdir=./infrastructure output -raw APP_INSIGHTS
       ACR_NAME:

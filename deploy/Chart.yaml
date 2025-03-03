@@ -1,6 +1,6 @@
 apiVersion: v2
-name: "template"
-description: A placeholder Helm chart for a Kubernetes deployment
+name: "roman-coin-analyzer"
+description: A simple OpenAI app to analyze ancient coins from Rome
 type: application
 version: 1.0.0
 appVersion: "1.0.0"
