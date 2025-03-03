@@ -36,7 +36,11 @@ export default function App() {
     });
 
     try {
-      const response = await fetch(process.env.EXPO_PUBLIC_API_URL, {
+      const api_uri = process.env.EXPO_PUBLIC_API_URL;
+      if (!api_uri) {
+        throw new Error("API URL is not defined");
+      }
+      const response = await fetch(api_uri, {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",
