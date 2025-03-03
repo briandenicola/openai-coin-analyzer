@@ -14,6 +14,7 @@ resource "random_integer" "pod_cidr" {
 locals {
   location             =  var.aks_cluster.location
   aks_name             =  var.aks_cluster.name
+  acr_name             = "${replace(var.resource_name, "-", "")}acr"
   aks_rg_name          = "${local.aks_name}_rg"
   aks_node_rg_name     = "${local.aks_name}_nodes_rg"
   istio_version        = [ var.aks_cluster.istio.version ]
@@ -25,7 +26,7 @@ resource "azurerm_resource_group" "this" {
 
   tags = {
     Application = var.tags
-    Components  = "Azure Kubernetes Service;"
+    Components  = "Azure Kubernetes Service; Azure Container Registry"
     Environment = var.sdlc_environment
     DeployedOn  = timestamp()
   }

@@ -8,6 +8,11 @@ output "APP_RESOURCE_GROUP" {
     sensitive = false
 }
 
+output "AKS_RESOURCE_GROUP" {
+    value = module.cluster.AKS_RESOURCE_GROUP
+    sensitive = false
+}
+
 output "ACR_NAME" {
   value     = local.acr_name
   sensitive = false
@@ -35,5 +40,5 @@ output "WORKLOAD_TENANT_ID" {
 
 output "APP_INSIGHTS" {
     value = module.azure_monitor.APP_INSIGHTS_CONNECTION_STRING
-    sensitive = false
+    sensitive = true
 }

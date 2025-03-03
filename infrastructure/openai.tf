@@ -3,7 +3,7 @@ module "openai" {
     azurerm_resource_group.app,
   ]
   source               = "./modules/openai"
-  resource_name        = local.aoai_name
+  resource_name        = local.resource_name
   resource_group = {
     location = azurerm_resource_group.app.location
     name     = azurerm_resource_group.app.name

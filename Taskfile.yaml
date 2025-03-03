@@ -7,8 +7,8 @@ vars:
   TITLE: Roman Imperial Coin Analyzer
   HELM_CHART: ric-analyzer
   SKU: Standard_D4ads_v5
-  DEFAULT_REGION: "westus"
-  DEFAULT_DOMAIN: "bjdazure.tech"
+  DEFAULT_REGION: candacentral
+  DEFAULT_DOMAIN: bjdazure.tech
   COUNT: 2
 
 includes:
@@ -70,12 +70,10 @@ tasks:
     desc: Builds and Deploys the UI code to Azure Static Web Apps
     dir: ./src/ui
     cmds:
-      - cmd: swa build -a . -O build
-      - cmd: swa deploy --env production --app-location build --deployment-token {{.DEPLOY_TOKEN}}
+      - cmd: npx expo export --platform web
+      - cmd: swa deploy --env production --app-location dist --deployment-token {{.DEPLOY_TOKEN}}
         silent: true
     vars:
-      APP_NAME:
-        sh: terraform -chdir=../infrastructure output -raw APP_NAME
       SWA:
         sh: terraform -chdir=../infrastructure output -raw AZURE_STATIC_WEBAPP_NAME
       DEPLOY_TOKEN:

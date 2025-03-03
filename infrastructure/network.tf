@@ -87,9 +87,9 @@ resource "azurerm_network_security_group" "this" {
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
-    source_port_range          = local.home_ip_address
+    source_port_range          = "*"
     destination_port_range     = "80"
-    source_address_prefix      = "*"
+    source_address_prefix      = local.home_ip_address
     destination_address_prefix = "*"
   }
 

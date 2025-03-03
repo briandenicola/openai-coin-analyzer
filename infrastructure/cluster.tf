@@ -1,6 +1,5 @@
 module "cluster" {
   depends_on = [
-    azurerm_nat_gateway.this,
     module.azure_monitor
   ]
   source           = "./modules/aks"

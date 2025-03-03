@@ -7,7 +7,7 @@ TBD
 - [ ] APIM Configuration and API Policies 
 - [X] Simple React Front End 
 - [X] ACR Container Build Task
-- [ ] Deployment to SWA
+- [X] Deployment to SWA
 - [X] Deployment to AKS
 - [ ] End to End Testing
 - [X] DevContainers

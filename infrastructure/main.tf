@@ -1,8 +1,7 @@
 locals {
   resource_name          = "${random_pet.this.id}-${random_id.this.dec}"
   aks_name               = "${local.resource_name}-aks"
-  aoai_name              = "${local.resource_name}-openai"
-  apim_name              = "${local.resource_name}-apim"
+  apim_name              = "${local.resource_name}-apim1"
   vnet_name              = "${local.resource_name}-vnet"
   sa_name                = "${replace(local.resource_name, "-", "")}files"
   acr_name               = "${replace(local.resource_name, "-", "")}acr"

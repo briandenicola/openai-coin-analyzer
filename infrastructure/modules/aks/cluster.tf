@@ -3,7 +3,7 @@ data "azurerm_kubernetes_service_versions" "current" {
 }
 
 locals {
-  zones = var.aks_cluster.location == "northcentralus" || var.aks_cluster.location == "canadaeast" ? null : var.aks_cluster.zones
+  zones = var.aks_cluster.location == "westus" || var.aks_cluster.location == "northcentralus" || var.aks_cluster.location == "canadaeast" ? null : var.aks_cluster.zones
 }
 
 resource "azurerm_kubernetes_cluster" "this" {
@@ -38,8 +38,8 @@ resource "azurerm_kubernetes_cluster" "this" {
   image_cleaner_enabled        = true
   image_cleaner_interval_hours = 48
 
-  automatic_upgrade_channel = "patch"
-  node_os_upgrade_channel   = "SecurityPatch"
+  automatic_upgrade_channel    = "patch"
+  node_os_upgrade_channel      = "SecurityPatch"
 
   api_server_access_profile {
     authorized_ip_ranges = var.aks_cluster.authorized_ip_ranges

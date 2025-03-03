@@ -22,3 +22,8 @@ output "AKS_OIDC_ISSUER_URL" {
     value = azurerm_kubernetes_cluster.this.oidc_issuer_url
     sensitive = false 
 }
+
+output ACR_RESOURCE_ID {
+    value = azurerm_container_registry.this.id
+    sensitive = false
+}

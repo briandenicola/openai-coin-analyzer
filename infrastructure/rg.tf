@@ -5,7 +5,7 @@ resource "azurerm_resource_group" "this" {
     Application         = var.tags
     DeployedOn          = timestamp()
     AppName             = local.resource_name
-    Tier                = "Azure Container Registry; Azure Virtual Network; Private DNS Zone"
+    Tier                = "Azure Virtual Network; Private DNS Zone; Private Endpoints"
   }
 }
 
@@ -16,6 +16,6 @@ resource "azurerm_resource_group" "app" {
     Application         = var.tags
     DeployedOn          = timestamp()
     AppName             = local.resource_name
-    Tier                = "PostgreSQL; Static Web App; Azure OpenAI"
+    Tier                = "Static Web App; Azure OpenAI; Azure API Management; Azure Storage"
   }
 }
