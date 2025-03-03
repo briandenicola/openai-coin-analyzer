@@ -42,7 +42,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   node_os_upgrade_channel      = "SecurityPatch"
 
   api_server_access_profile {
-    authorized_ip_ranges = var.aks_cluster.authorized_ip_ranges
+    authorized_ip_ranges = [ var.aks_cluster.authorized_ip_ranges ]
   }
 
   azure_active_directory_role_based_access_control {

@@ -14,7 +14,7 @@ variable "aks_cluster" {
   type = object({
     name                  = string
     location              = string
-    authorized_ip_ranges  = list(string)
+    authorized_ip_ranges  = string
     public_key_openssh    = string
     zones                 = list(string)
     resource_group = object({

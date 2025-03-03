@@ -48,7 +48,7 @@ tasks:
     desc: Gets credential file for newly created AKS cluster
     cmds:
       - az aks get-credentials -g {{.RG}} -n {{.AKS}} --overwrite-existing
-      - kubelogin convert-kubeconfig -l azurecli
+      - sed -i s/devicecode/azurecli/g ~/.kube/config
     vars:
       RG:
         sh: terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP
@@ -83,14 +83,13 @@ tasks:
     desc: Deploys application via Helm
     cmds:
       - helm upgrade -i {{.HELM_CHART}}
-        --set ACR.NAME="{{.ACR_NAME}}"
+        --set ACR.NAME="{{.ACR_NAME}}.azurecr.io"
         --set APP.VERSION={{.COMMIT_VERSION}}
         --set APP.TAG_NAME={{.TAG_NAME}}
         --set APP.URL="api.ric.{{.DEFAULT_DOMAIN}}"
         --set WORKLOAD_ID.NAME={{.WORKLOAD_ID_NAME}}
         --set WORKLOAD_ID.CLIENT_ID={{.WORKLOAD_CLIENT_ID}}
         --set WORKLOAD_ID.TENANT_ID={{.WORKLOAD_TENANT_ID}}
-        --set WORKLOAD_ID.NAME={{.ARM_WORKLOAD_APP_NAME}}
         --set APP_INSIGHTS.CONNECTION_STRING="{{.APP_INSIGHTS}}" ./deploy
     vars:
       TAG_NAME:
@@ -105,6 +104,8 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw APP_INSIGHTS
       ACR_NAME:
         sh: terraform -chdir=./infrastructure output -raw ACR_NAME
+      COMMIT_VERSION:
+        sh: git rev-parse HEAD | cut -c 1-8        
 
   down:
     desc: Destroys all Azure resources and cleans up Terraform

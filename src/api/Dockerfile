@@ -9,7 +9,7 @@ RUN dotnet publish -c Release --nologo -o publish/linux -r linux-x64 --self-cont
 FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-azurelinux3.0-distroless
 
 WORKDIR /app
-COPY --from=builder /src/publish/linux/api .
+COPY --from=builder /src/publish/linux/ric_analyzer .
 COPY appsettings.json .
 EXPOSE 5501
-ENTRYPOINT ["/app/api"]
+ENTRYPOINT ["/app/ric_analyzer"]
