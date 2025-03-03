@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, Button, Image, StyleSheet, ActivityIndicator } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import Constants from "expo-constants";
 
 export default function App() {
   const [selectedImage, setSelectedImage] = useState(null);

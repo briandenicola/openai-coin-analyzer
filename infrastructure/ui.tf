@@ -4,4 +4,8 @@ resource "azurerm_static_web_app" "this" {
   location            = local.static_webapp_location
   sku_size            = "Free"
   sku_tier            = "Free"
+
+  app_settings  = {
+    EXPO_PUBLIC_API_URL =  "${azurerm_api_management.this.gateway_url}"
+  }
 }
