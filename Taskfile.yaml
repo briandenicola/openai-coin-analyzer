@@ -114,9 +114,9 @@ tasks:
         --set WORKLOAD_ID.TENANT_ID={{.WORKLOAD_TENANT_ID}}
         --set OPENAI.ENDPOINT={{.OPENAI_ENDPOINT}} ./charts/api > 
         ./cluster-config/api/components.yaml
-      - git add ./cluster-config/api/components.yaml
-      - git commit -m "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} app 🤖🤖🤖 components"
-      - git push --set-upstream origin {{.TAG_NAME}}
+      - git add ./cluster-config/api/components.yaml || true
+      - git commit -m "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} app 🤖🤖🤖 components" || true
+      - git push --set-upstream origin {{.TAG_NAME}} || true
       - git checkout main        
     vars:
       TAG_NAME:
@@ -147,9 +147,9 @@ tasks:
         --set ISTIO.KEYVAULT_NAME={{.KEYVAULT_NAME}}
         --set APP_INSIGHTS.CONNECTION_STRING="{{.APP_INSIGHTS}}"
         ./charts/infra > ./cluster-config/infrastructure/components.yaml
-      - git add ./cluster-config/infrastructure/components.yaml
-      - git commit -m "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} infra 🖥️ certificates"
-      - git push --set-upstream origin {{.TAG_NAME}}
+      - git add ./cluster-config/infrastructure/components.yaml || true
+      - git commit -m "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} infra 🖥️ certificates" || true
+      - git push --set-upstream origin {{.TAG_NAME}} || true
       - git checkout main      
     vars:
       TAG_NAME:
