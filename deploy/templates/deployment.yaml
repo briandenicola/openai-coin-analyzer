@@ -23,13 +23,6 @@ spec:
         azure.workload.identity/use: "true"
     spec:
       serviceAccountName: {{ .Values.WORKLOAD_ID.NAME }}
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000  
-        supplementalGroups: [2000]
-        fsGroup: 2000
-        seccompProfile:
-          type: RuntimeDefault
       containers:
       - name: {{ .Values.APP.NAME }}
         image:  {{ print .Values.ACR.NAME "/" .Values.APP.NAMESPACE "/" .Values.APP.NAME ":" .Values.APP.VERSION }} 

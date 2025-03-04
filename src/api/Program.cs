@@ -33,6 +33,7 @@ app.MapHealthChecks("/healthz");
 app.AddDefaultRoute();
 app.AddUploadImageHandler();
 app.AddGetResultsHandler();
+app.UseSwagger();
 
 app.Logger.LogInformation($"{builder.Environment.ApplicationName} - App Run");
 app.Run();
