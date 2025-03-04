@@ -9,8 +9,11 @@ APP:
 ISTIO:
   GATEWAY                               : "aks-istio-ingress/default-bjdazure-tech-gw"
 
+OPENAI: 
+  ENDPOINT                              : ""
+  
 ACR:
-  NAME                                  :  ""
+  NAME                                  : ""
 
 APP_INSIGHTS:
   CONNECTION_STRING                     : ""
