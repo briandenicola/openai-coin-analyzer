@@ -114,3 +114,8 @@ resource "azurerm_subnet_network_security_group_association" "compute" {
   subnet_id                 = azurerm_subnet.compute.id
   network_security_group_id = azurerm_network_security_group.this.id
 }
+
+resource "azurerm_subnet_network_security_group_association" "sql" {
+  subnet_id                 = azurerm_subnet.sql.id
+  network_security_group_id = azurerm_network_security_group.this.id
+}

@@ -9,7 +9,7 @@ vars:
   SKU: Standard_D4ads_v5
   DEFAULT_REGION: candacentral
   DEFAULT_DOMAIN: bjdazure.tech
-  APP_URL: api.ric.{{.DEFAULT_DOMAIN}}
+  APP_URL: https://ric.{{.DEFAULT_DOMAIN}}
   COUNT: 2
 
 includes:
@@ -52,6 +52,7 @@ tasks:
         -var "node_sku={{.SKU}}"
         -var "node_count={{.COUNT}}"
         -var "tags={{.TITLE}}"
+        -var "custom_domain={{.APP_URL}}"
         -var "certificate_base64_encoded={{.CERT}}" 
         -var "certificate_password={{.CERT_PFX_PASS}}"
     vars:
@@ -141,7 +142,8 @@ tasks:
       - helm template {{.HELM_CHART}}
         --set APP.TAG_NAME={{.TAG_NAME}}
         --set ISTIO.CLIENT_ID={{.ISTIO_CLIENT_ID}}
-        --set ISTIO.TENANT_ID={{.ISTIO_TENANT_ID}}        
+        --set ISTIO.TENANT_ID={{.ISTIO_TENANT_ID}}
+        --set ISTIO.KEYVAULT_NAME={{.KEYVAULT_NAME}}
         --set APP_INSIGHTS.CONNECTION_STRING="{{.APP_INSIGHTS}}"
         ./charts/infra > ./cluster-config/infrastructure/components.yaml
       - git add ./cluster-config/infrastructure/components.yaml
@@ -157,6 +159,8 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw ISTIO_CLIENT_ID
       ISTIO_TENANT_ID:
         sh: terraform -chdir=./infrastructure output -raw ISTIO_TENANT_ID  
+      KEYVAULT_NAME:
+        sh: terraform -chdir=./infrastructure output -raw KEYVAULT_NAME  
       DATE_TIME:
         sh: date     
 

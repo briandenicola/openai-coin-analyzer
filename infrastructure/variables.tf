@@ -35,3 +35,7 @@ variable "certificate_name" {
   description = "The name of the certificate to use for TLS"
   default     = "wildcard-certificate"
 }
+
+variable "custom_domain" {
+  description = "The custom domain to use for the application"
+}

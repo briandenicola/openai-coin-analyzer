@@ -50,5 +50,5 @@ resource "azurerm_api_management_backend" "ric_api_backend" {
   resource_group_name = azurerm_resource_group.app.name
   api_management_name = azurerm_api_management.this.name
   protocol            = "http"
-  url                 = "https://api.ric.bjdazure.tech"
+  url                 = var.custom_domain
 }

@@ -33,6 +33,11 @@ output "KEYVAULT_RESOURCE_ID" {
     sensitive = false
 }
 
+output "KEYVAULT_NAME" {
+    value = azurerm_key_vault.this.name
+    sensitive = false
+}
+
 output "ISTIO_CLIENT_ID" {
     value = azurerm_user_assigned_identity.aks_service_mesh_identity.client_id
     sensitive = false

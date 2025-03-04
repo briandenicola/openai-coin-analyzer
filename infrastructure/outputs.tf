@@ -67,3 +67,8 @@ output "ISTIO_TENANT_ID" {
     value = module.cluster.ISTIO_TENANT_ID
     sensitive = false
 }
+
+output "KEYVAULT_NAME" {
+    value = module.cluster.KEYVAULT_NAME
+    sensitive = false
+}
