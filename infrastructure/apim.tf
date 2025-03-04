@@ -27,10 +27,10 @@ resource "azurerm_api_management_api" "ric_api" {
   path                  = "ric-api"
   protocols             = ["http", "https"]
   subscription_required = false
-  import {
-    content_format = "swagger-link-json"
-    content_value  = local.swagger_url
-  }
+  # import {
+  #   content_format = "swagger-link-json"
+  #   content_value  = local.swagger_url
+  # }
 }
 
 
