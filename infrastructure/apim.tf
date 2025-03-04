@@ -63,8 +63,16 @@ resource "azurerm_api_management_product_policy" "ric_api_product_policy" {
   <policies>
     <inbound>
         <base />
-        <set-backend-service backend-id="${local.apim_backend_name}" />
     </inbound>
+    <backend>
+        <set-backend-service backend-id="${local.apim_backend_name}" />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>  
 </policies>
 XML
 
