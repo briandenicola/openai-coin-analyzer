@@ -23,7 +23,15 @@ variable "node_count" {
   default     = 1
 }
 
-variable "github_repo_branch" {
-  description = "The branched used for Infrastructure GitOps"
-  default     = "main"
+variable "certificate_base64_encoded" {
+  description = "TLS Certificate for Istio Ingress Gateway"
+}
+
+variable "certificate_password" {
+  description = "Password for TLS Certificate"
+}
+
+variable "certificate_name" {
+  description = "The name of the certificate to use for TLS"
+  default     = "wildcard-certificate"
 }

@@ -1,0 +1,13 @@
+OTEL:
+  ZIPKIN_ENDPOINT                       : "http://otel-collector.otel-system.svc.cluster.local:9411/api/v2/spans"
+  ENDPOINT                              : "http://otel-collector.otel-system.svc.cluster.local:4317"
+  VERSION                               : "0.98.0"
+  NAMESPACE                             : "otel-system"
+
+APP_INSIGHTS:
+  CONNECTION_STRING                     : ""
+
+ISTIO:
+  CLIENT_ID                             : ""
+  TENANT_ID                             : ""                         
+  KEYVAULT_NAME                         : ""

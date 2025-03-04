@@ -42,8 +42,12 @@ tasks:
         -var "node_sku={{.SKU}}"
         -var "node_count={{.COUNT}}"
         -var "tags={{.TITLE}}"
+        -var "certificate_base64_encoded={{.CERT}}" 
+        -var "certificate_password={{.CERT_PFX_PASS}}"
     vars:
       REGION: "{{default .DEFAULT_REGION .CLI_ARGS}}"
+      CERT:
+        sh: cat {{.CERT_PATH}} | base64
 
   creds:
     desc: Gets credential file for newly created AKS cluster
@@ -83,18 +87,22 @@ tasks:
       APIM_GATEWAY:
         sh: terraform -chdir=../../infrastructure output -raw APIM_GATEWAY        
 
-  deploy:
-    desc: Deploys application via Helm
+  deploy-app:
+    desc: Deploys application via Helm/GitOps
     cmds:
-      - helm upgrade -i {{.HELM_CHART}}
+      - git checkout -b {{.TAG_NAME}} 2>>1 > /dev/null || true
+      - helm template {{.HELM_CHART}}
         --set ACR.NAME="{{.ACR_NAME}}.azurecr.io"
         --set APP.VERSION={{.COMMIT_VERSION}}
         --set APP.TAG_NAME={{.TAG_NAME}}
         --set WORKLOAD_ID.NAME={{.WORKLOAD_ID_NAME}}
         --set WORKLOAD_ID.CLIENT_ID={{.WORKLOAD_CLIENT_ID}}
         --set WORKLOAD_ID.TENANT_ID={{.WORKLOAD_TENANT_ID}}
-        --set OPENAI.ENDPOINT={{.OPENAI_ENDPOINT}}
-        --set APP_INSIGHTS.CONNECTION_STRING="{{.APP_INSIGHTS}}" ./deploy
+        --set OPENAI.ENDPOINT={{.OPENAI_ENDPOINT}} ./charts/api > 
+        ./cluster-config/api/components.yaml
+      - git add ./cluster-config/api/components.yaml
+      - git commit "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} 🤖🤖🤖 components"
+      - git push --set-upstream origin {{.TAG_NAME}}        
     vars:
       TAG_NAME:
         sh: terraform -chdir=./infrastructure output -raw APP_NAME
@@ -104,14 +112,35 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw WORKLOAD_CLIENT_ID
       WORKLOAD_TENANT_ID:
         sh: terraform -chdir=./infrastructure output -raw WORKLOAD_TENANT_ID
-      APP_INSIGHTS:
-        sh: terraform -chdir=./infrastructure output -raw APP_INSIGHTS
       ACR_NAME:
         sh: terraform -chdir=./infrastructure output -raw ACR_NAME
       OPENAI_ENDPOINT:
         sh: terraform -chdir=./infrastructure output -raw OPENAI_ENDPOINT
       COMMIT_VERSION:
         sh: git rev-parse HEAD | cut -c 1-8 
+
+  istio-config:
+    desc: Deploys Istio Certificate and Otel infrastructure via Helm/GitOps
+    cmds:
+      - git checkout -b {{.TAG_NAME}} 2>>1 > /dev/null || true
+      - helm template {{.HELM_CHART}}
+        --set APP.TAG_NAME={{.TAG_NAME}}
+        --set ISTIO.CLIENT_ID={{.ISTIO_CLIENT_ID}}
+        --set ISTIO.TENANT_ID={{.ISTIO_TENANT_ID}}        
+        --set APP_INSIGHTS.CONNECTION_STRING="{{.APP_INSIGHTS}}"
+        ./charts/infra > ./cluster-config/infrastructure/components.yaml
+      - git add ./cluster-config/infrastructure/{{.TAG_NAME}}.yaml
+      - git commit "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} 🖥️ components"
+      - git push --set-upstream origin {{.TAG_NAME}}
+    vars:
+      TAG_NAME:
+        sh: terraform -chdir=./infrastructure output -raw APP_NAME
+      APP_INSIGHTS:
+        sh: terraform -chdir=./infrastructure output -raw APP_INSIGHTS
+      ISTIO_CLIENT_ID:
+        sh: terraform -chdir=./infrastructure output -raw ISTIO_CLIENT_ID
+      ISTIO_TENANT_ID:
+        sh: terraform -chdir=./infrastructure output -raw ISTIO_TENANT_ID        
 
   apim:
     desc: Gets the IP Address of the Istio Gateway

@@ -2,7 +2,7 @@ APP:
   NAME                                  : "analyzer-api"
   NAMESPACE                             : "ric"
   TAG_NAME                              : ""
-  URL                                   : "api.ric.bjdazure.tech"
+  URL                                   : "ric.bjdazure.tech"
   PORT                                  : "8080"
   VERSION                               : "1.0"
 
@@ -14,9 +14,6 @@ OPENAI:
   
 ACR:
   NAME                                  : ""
-
-APP_INSIGHTS:
-  CONNECTION_STRING                     : ""
               
 WORKLOAD_ID:
   NAME                                  : ""
@@ -24,7 +21,4 @@ WORKLOAD_ID:
   TENANT_ID                             : ""
 
 OTEL:
-  ZIPKIN_ENDPOINT                       : "http://otel-collector.otel-system.svc.cluster.local:9411/api/v2/spans"
   ENDPOINT                              : "http://otel-collector.otel-system.svc.cluster.local:4317"
-  VERSION                               : "0.98.0"
-  NAMESPACE                             : "otel-system"

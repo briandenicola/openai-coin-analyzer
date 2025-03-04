@@ -42,6 +42,12 @@ variable "aks_cluster" {
       enabled    = bool
       repository = string
       app_path   = string
+      branch     = string
+    })
+    certificate = object({
+      contents       = string
+      password       = string
+      name           = string
     })
   })
 }

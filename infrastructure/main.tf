@@ -5,6 +5,7 @@ locals {
   vnet_name              = "${local.resource_name}-vnet"
   sa_name                = "${replace(local.resource_name, "-", "")}files"
   acr_name               = "${replace(local.resource_name, "-", "")}acr"
+  keyvault_name          = "${replace(local.resource_name, "-", "")}kv"
   static_webapp_name     = "${local.resource_name}-ui"
   static_webapp_location = "centralus"
   app_path               = "./cluster-config"

@@ -27,12 +27,16 @@ resource "azurerm_api_management_api" "ric_api" {
   path                  = "ric-api"
   protocols             = ["http", "https"]
   subscription_required = false
+
+  #
+  # There is a bug in the azurerm provider that causes the API to not be created using "swagger-link-json"
+  # Manually update the API to import the Swagger document from ${local.swagger_url} in the Azure portal after creation
+  #
   # import {
   #   content_format = "swagger-link-json"
   #   content_value  = local.swagger_url
   # }
 }
-
 
 resource "azurerm_api_management_product_api" "ric_api_product_association" {
   api_name            = azurerm_api_management_api.ric_api.name

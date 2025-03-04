@@ -4,4 +4,7 @@ resources:
   - ./prometheus
   - ./configuration
   - ./gateways
-  
+  - ./hubble
+  - ./infrastructure
+  - ./api
+   

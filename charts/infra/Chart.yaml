@@ -1,0 +1,6 @@
+apiVersion: v2
+name: "roman-coin-analyzer-infra"
+description: A simple OpenAI app to analyze ancient coins from Rome
+type: application
+version: 1.0.0
+appVersion: "1.0.0"

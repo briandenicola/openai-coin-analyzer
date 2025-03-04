@@ -57,3 +57,13 @@ output "APIM_GATEWAY" {
     value = azurerm_api_management.this.gateway_url
     sensitive = false
 }
+
+output "ISTIO_CLIENT_ID" {
+    value = module.cluster.ISTIO_CLIENT_ID
+    sensitive = false
+}
+
+output "ISTIO_TENANT_ID" {
+    value = module.cluster.ISTIO_TENANT_ID
+    sensitive = false
+}

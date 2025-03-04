@@ -27,3 +27,18 @@ output ACR_RESOURCE_ID {
     value = azurerm_container_registry.this.id
     sensitive = false
 }
+
+output "KEYVAULT_RESOURCE_ID" {
+    value = azurerm_key_vault.this.id
+    sensitive = false
+}
+
+output "ISTIO_CLIENT_ID" {
+    value = azurerm_user_assigned_identity.aks_service_mesh_identity.client_id
+    sensitive = false
+}
+
+output "ISTIO_TENANT_ID" {
+    value = azurerm_user_assigned_identity.aks_service_mesh_identity.tenant_id
+    sensitive = false
+}

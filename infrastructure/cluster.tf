@@ -38,6 +38,12 @@ module "cluster" {
       enabled    = true
       repository = local.flux_repository
       app_path   = local.app_path
+      branch     = local.resource_name
+    }
+    certificate = {
+      name     = var.certificate_name
+      password = var.certificate_password
+      contents = var.certificate_base64_encoded
     }
   }
 }
