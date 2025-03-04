@@ -32,6 +32,7 @@ tasks:
       - task: creds
       - task: build
       - task: deploy
+      - task: dns
     vars:
       REGION: "{{default .DEFAULT_REGION .CLI_ARGS}}"
 
@@ -90,7 +91,7 @@ tasks:
   deploy-app:
     desc: Deploys application via Helm/GitOps
     cmds:
-      - git checkout -b {{.TAG_NAME}} 2>>1 > /dev/null || true
+      - git checkout -b {{.TAG_NAME}}  2>>/dev/null || true
       - helm template {{.HELM_CHART}}
         --set ACR.NAME="{{.ACR_NAME}}.azurecr.io"
         --set APP.VERSION={{.COMMIT_VERSION}}
@@ -122,7 +123,7 @@ tasks:
   istio-config:
     desc: Deploys Istio Certificate and Otel infrastructure via Helm/GitOps
     cmds:
-      - git checkout -b {{.TAG_NAME}} 2>>1 > /dev/null || true
+      - git checkout -b {{.TAG_NAME}} 2>>/dev/null || true
       - helm template {{.HELM_CHART}}
         --set APP.TAG_NAME={{.TAG_NAME}}
         --set ISTIO.CLIENT_ID={{.ISTIO_CLIENT_ID}}
@@ -142,11 +143,11 @@ tasks:
       ISTIO_TENANT_ID:
         sh: terraform -chdir=./infrastructure output -raw ISTIO_TENANT_ID        
 
-  apim:
+  dns:
     desc: Gets the IP Address of the Istio Gateway
     dir: ./scripts
     cmds:
-    - cmd: echo -e '➡️\033[1m\e[38;5;45mThe Azure APIM Backend should point to {{.IP}}'
+    - cmd: echo -e '➡️\033[1m\e[38;5;45mThe Azure APIM Backend ric.{{.DEFAULT_DOMAIN}} should resolve to {{.IP}}'
       silent: true
     vars:
       IP: 
