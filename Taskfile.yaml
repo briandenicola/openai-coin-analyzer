@@ -76,6 +76,7 @@ tasks:
     cmds:
       - task: branch
       - az acr build -t ric/analyzer-api:{{.COMMIT_VERSION}} -r {{.ACR_NAME}} .
+      - git checkout main 
     vars:
       ACR_NAME:
         sh: terraform -chdir=../../infrastructure output -raw ACR_NAME
