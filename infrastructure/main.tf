@@ -22,4 +22,6 @@ locals {
   istio_version         = "asm-1-23"
 
   home_ip_address       = chomp(data.http.myip.response_body)
+
+  swagger_url           = "https://raw.githubusercontent.com/briandenicola/openai-coin-analyzer/refs/heads/main/docs/swagger.json"
 }
