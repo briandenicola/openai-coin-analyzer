@@ -53,7 +53,6 @@ output "AZURE_STATIC_WEBAPP_NAME" {
     sensitive = false
 }
 
-
 output "APIM_GATEWAY" {
     value = azurerm_api_management.this.gateway_url
     sensitive = false
