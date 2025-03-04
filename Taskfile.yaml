@@ -91,7 +91,8 @@ tasks:
   deploy:
     desc: Deploys application via Helm/GitOps
     cmds:
-      - git checkout -b {{.TAG_NAME}}  2>>/dev/null || true
+      - git branch {{.TAG_NAME}} 2>>/dev/null || true
+      - git checkout {{.TAG_NAME}} 
       - helm template {{.HELM_CHART}}
         --set ACR.NAME="{{.ACR_NAME}}.azurecr.io"
         --set APP.VERSION={{.COMMIT_VERSION}}
@@ -103,7 +104,8 @@ tasks:
         ./cluster-config/api/components.yaml
       - git add ./cluster-config/api/components.yaml
       - git commit -m "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} app 🤖🤖🤖 components"
-      - git push --set-upstream origin {{.TAG_NAME}}        
+      - git push --set-upstream origin {{.TAG_NAME}}
+      - git checkout main        
     vars:
       TAG_NAME:
         sh: terraform -chdir=./infrastructure output -raw APP_NAME
@@ -125,7 +127,8 @@ tasks:
   certs:
     desc: Deploys Istio Certificate and Otel infrastructure via Helm/GitOps
     cmds:
-      - git checkout -b {{.TAG_NAME}} 2>>/dev/null || true
+      - git branch {{.TAG_NAME}} 2>>/dev/null || true
+      - git checkout {{.TAG_NAME}} 
       - helm template {{.HELM_CHART}}
         --set APP.TAG_NAME={{.TAG_NAME}}
         --set ISTIO.CLIENT_ID={{.ISTIO_CLIENT_ID}}
@@ -135,6 +138,7 @@ tasks:
       - git add ./cluster-config/infrastructure/components.yaml
       - git commit -m "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} infra 🖥️ certificates"
       - git push --set-upstream origin {{.TAG_NAME}}
+      - git checkout main      
     vars:
       TAG_NAME:
         sh: terraform -chdir=./infrastructure output -raw APP_NAME
