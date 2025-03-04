@@ -22,6 +22,15 @@ tasks:
     cmds:
       - task --list
 
+  branch:
+    internal: true
+    cmds:
+    - git branch {{.TAG_NAME}} 2>>/dev/null || true
+    - git checkout {{.TAG_NAME}} 
+    vars:
+      TAG_NAME:
+        sh: terraform -chdir=./infrastructure output -raw APP_NAME
+
   up:
     desc: Creates complete Azure environment for {{.TITLE}}
     cmds:
@@ -65,6 +74,7 @@ tasks:
     desc: Builds application via ACR tasks
     dir: ./src/api
     cmds:
+      - task: branch
       - az acr build -t ric/analyzer-api:{{.COMMIT_VERSION}} -r {{.ACR_NAME}} .
     vars:
       ACR_NAME:
@@ -91,8 +101,7 @@ tasks:
   deploy:
     desc: Deploys application via Helm/GitOps
     cmds:
-      - git branch {{.TAG_NAME}} 2>>/dev/null || true
-      - git checkout {{.TAG_NAME}} 
+      - task: branch 
       - helm template {{.HELM_CHART}}
         --set ACR.NAME="{{.ACR_NAME}}.azurecr.io"
         --set APP.VERSION={{.COMMIT_VERSION}}
@@ -127,8 +136,7 @@ tasks:
   certs:
     desc: Deploys Istio Certificate and Otel infrastructure via Helm/GitOps
     cmds:
-      - git branch {{.TAG_NAME}} 2>>/dev/null || true
-      - git checkout {{.TAG_NAME}} 
+      - task: branch
       - helm template {{.HELM_CHART}}
         --set APP.TAG_NAME={{.TAG_NAME}}
         --set ISTIO.CLIENT_ID={{.ISTIO_CLIENT_ID}}
