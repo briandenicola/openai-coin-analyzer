@@ -102,7 +102,7 @@ tasks:
         --set OPENAI.ENDPOINT={{.OPENAI_ENDPOINT}} ./charts/api > 
         ./cluster-config/api/components.yaml
       - git add ./cluster-config/api/components.yaml
-      - git commit "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} 🤖🤖🤖 components"
+      - git commit "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} app 🤖🤖🤖 components"
       - git push --set-upstream origin {{.TAG_NAME}}        
     vars:
       TAG_NAME:
@@ -119,8 +119,10 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw OPENAI_ENDPOINT
       COMMIT_VERSION:
         sh: git rev-parse HEAD | cut -c 1-8 
+      DATE_TIME:
+        sh: date        
 
-  istio-config:
+  certs:
     desc: Deploys Istio Certificate and Otel infrastructure via Helm/GitOps
     cmds:
       - git checkout -b {{.TAG_NAME}} 2>>/dev/null || true
@@ -130,8 +132,8 @@ tasks:
         --set ISTIO.TENANT_ID={{.ISTIO_TENANT_ID}}        
         --set APP_INSIGHTS.CONNECTION_STRING="{{.APP_INSIGHTS}}"
         ./charts/infra > ./cluster-config/infrastructure/components.yaml
-      - git add ./cluster-config/infrastructure/{{.TAG_NAME}}.yaml
-      - git commit "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} 🖥️ components"
+      - git add ./cluster-config/infrastructure/components.yaml
+      - git commit "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} infra 🖥️ certificates"
       - git push --set-upstream origin {{.TAG_NAME}}
     vars:
       TAG_NAME:
@@ -141,7 +143,9 @@ tasks:
       ISTIO_CLIENT_ID:
         sh: terraform -chdir=./infrastructure output -raw ISTIO_CLIENT_ID
       ISTIO_TENANT_ID:
-        sh: terraform -chdir=./infrastructure output -raw ISTIO_TENANT_ID        
+        sh: terraform -chdir=./infrastructure output -raw ISTIO_TENANT_ID  
+      DATE_TIME:
+        sh: date     
 
   dns:
     desc: Gets the IP Address of the Istio Gateway
