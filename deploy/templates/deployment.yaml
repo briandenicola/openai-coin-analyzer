@@ -20,6 +20,7 @@ spec:
       labels:
         app: {{ .Values.APP.NAME }}
         name: {{ .Values.APP.TAG_NAME }}
+        azure.workload.identity/use: "true"
     spec:
       serviceAccountName: {{ .Values.WORKLOAD_ID.NAME }}
       containers:
@@ -28,6 +29,11 @@ spec:
         imagePullPolicy: Always
         securityContext:
           runAsNonRoot: true
+        env:
+        - name: RIC_OTEL_ENDPOINT
+          value: {{ .Values.OTEL.ENDPOINT }}
+        - name: RIC_AOI_ENDPOINT
+          value:  {{ .Values.OPENAI.ENDPOINT }}
         ports:
         - containerPort: 8080
         resources:
