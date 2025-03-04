@@ -12,6 +12,7 @@ resource "azurerm_api_management_product" "ric_api_product" {
   api_management_name   = azurerm_api_management.this.name
   resource_group_name   = azurerm_resource_group.app.name
   display_name          = "Roman Imperial Coin Analyzer"
+  description           = "Roman Imperial Coin Analyzer"
   subscription_required = false
   approval_required     = false
   published             = true
@@ -46,9 +47,25 @@ resource "azurerm_api_management_product_api" "ric_api_product_association" {
 }
 
 resource "azurerm_api_management_backend" "ric_api_backend" {
-  name                = "ric-backend"
+  name                = local.apim_backend_name
   resource_group_name = azurerm_resource_group.app.name
   api_management_name = azurerm_api_management.this.name
   protocol            = "http"
   url                 = var.custom_domain
+}
+
+resource "azurerm_api_management_product_policy" "ric_api_product_policy" {
+  product_id          = azurerm_api_management_product.ric_api_product.product_id
+  api_management_name = azurerm_api_management_product.this.api_management_name
+  resource_group_name = azurerm_api_management_product.this.resource_group_name
+
+  xml_content = <<XML
+  <policies>
+    <inbound>
+        <base />
+        <set-backend-service backend-id="${local.apim_backend_name}" />
+    </inbound>
+</policies>
+XML
+
 }
