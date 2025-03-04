@@ -23,17 +23,25 @@ spec:
         azure.workload.identity/use: "true"
     spec:
       serviceAccountName: {{ .Values.WORKLOAD_ID.NAME }}
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000  
+        supplementalGroups: [2000]
+        fsGroup: 2000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: {{ .Values.APP.NAME }}
         image:  {{ print .Values.ACR.NAME "/" .Values.APP.NAMESPACE "/" .Values.APP.NAME ":" .Values.APP.VERSION }} 
         imagePullPolicy: Always
         securityContext:
           runAsNonRoot: true
+          allowPrivilegeEscalation: false 
         env:
         - name: RIC_OTEL_ENDPOINT
-          value: {{ .Values.OTEL.ENDPOINT }}
+          value: {{ print .Values.OTEL.ENDPOINT }}
         - name: RIC_AOI_ENDPOINT
-          value:  {{ .Values.OPENAI.ENDPOINT }}
+          value:  {{ print .Values.OPENAI.ENDPOINT }}
         ports:
         - containerPort: 8080
         resources:
