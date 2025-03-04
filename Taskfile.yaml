@@ -39,6 +39,7 @@ tasks:
       - terraform -chdir=./infrastructure init
       - task: apply
       - task: creds
+      - task: certs
       - task: build
       - task: deploy
       - task: dns
