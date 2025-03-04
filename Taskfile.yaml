@@ -88,7 +88,7 @@ tasks:
       APIM_GATEWAY:
         sh: terraform -chdir=../../infrastructure output -raw APIM_GATEWAY        
 
-  deploy-app:
+  deploy:
     desc: Deploys application via Helm/GitOps
     cmds:
       - git checkout -b {{.TAG_NAME}}  2>>/dev/null || true
@@ -102,7 +102,7 @@ tasks:
         --set OPENAI.ENDPOINT={{.OPENAI_ENDPOINT}} ./charts/api > 
         ./cluster-config/api/components.yaml
       - git add ./cluster-config/api/components.yaml
-      - git commit "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} app 🤖🤖🤖 components"
+      - git commit -m "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} app 🤖🤖🤖 components"
       - git push --set-upstream origin {{.TAG_NAME}}        
     vars:
       TAG_NAME:
@@ -133,7 +133,7 @@ tasks:
         --set APP_INSIGHTS.CONNECTION_STRING="{{.APP_INSIGHTS}}"
         ./charts/infra > ./cluster-config/infrastructure/components.yaml
       - git add ./cluster-config/infrastructure/components.yaml
-      - git commit "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} infra 🖥️ certificates"
+      - git commit -m "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} infra 🖥️ certificates"
       - git push --set-upstream origin {{.TAG_NAME}}
     vars:
       TAG_NAME:
