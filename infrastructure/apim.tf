@@ -56,8 +56,8 @@ resource "azurerm_api_management_backend" "ric_api_backend" {
 
 resource "azurerm_api_management_product_policy" "ric_api_product_policy" {
   product_id          = azurerm_api_management_product.ric_api_product.product_id
-  api_management_name = azurerm_api_management_product.this.api_management_name
-  resource_group_name = azurerm_api_management_product.this.resource_group_name
+  api_management_name = azurerm_api_management.this.name
+  resource_group_name = azurerm_api_management.this.resource_group_name
 
   xml_content = <<XML
   <policies>
