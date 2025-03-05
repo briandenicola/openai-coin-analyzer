@@ -43,6 +43,7 @@ export default function App() {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",
+          "ocp-apim-subscription-key": process.env.EXPO_PUBLIC_API_KEY,
         },
         body: formData,
       });

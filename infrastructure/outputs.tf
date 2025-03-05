@@ -54,7 +54,7 @@ output "AZURE_STATIC_WEBAPP_NAME" {
 }
 
 output "APIM_GATEWAY" {
-    value = "${azurerm_api_management.this.gateway_url}/${local.apim_api_path}"
+    value = "${azurerm_api_management.this.gateway_url}/${local.apim_api_path}/analyze"
     sensitive = false
 }
 
