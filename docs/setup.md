@@ -34,6 +34,8 @@
 * The Azure Service Mesh has an External Gateway and required a TLS Certificate. 
 * [This guide](./docs/letsencrypt.md) will walk you through Let's Encrypt with Azure DNS
 
+<p align="right">(<a href="#setup-and-deployment">Back to Top</a>)</p>
+
 ## Task
 * The deployment of this application has been automated using [Taskfile](https://taskfile.dev/#/).  This was done instead of using a CI/CD pipeline to make it easier to understand the deployment process.  
 * Of course, the application can be deployed manually
@@ -57,6 +59,7 @@ DOMAIN_ROOT | Default root domain used for all URLs & certs | taskfile.yaml | Ye
     * `task build`              : Builds containers and pushes to Azure Container Registry
     * `task deploy`             : Creates application components and deploy the application code
     * `task ui`                 : Deploys Blazor UI components to Azure Static Web Apps
+<p align="right">(<a href="#setup-and-deployment">Back to Top</a>)</p>
 
 # Navigation
 [⏪ Previous Section](../README.md) ‖ [Return to Main Index 🏠](../README.md) ‖ [Next Section ⏩](../docs/letsencrypt.md) 
