@@ -47,7 +47,6 @@ public static class ProgramExtensions
             .AddHttpClientInstrumentation()
             .AddSource(ricActivitySource.Name)
             .AddSource("Microsoft.SemanticKernel*")
-            //.AddConsoleExporter()
             .AddOtlpExporter(opt =>
             {
                 opt.Endpoint = new Uri(otelConnectionString);
@@ -63,7 +62,6 @@ public static class ProgramExtensions
             .AddMeter("Microsoft.AspNetCore.Server.Kestrel")
             .AddMeter("Microsoft.SemanticKernel*")
             .AddPrometheusExporter(o => o.DisableTotalNameSuffixForCounters = true) 
-            //.AddConsoleExporter()
             .AddOtlpExporter(opt =>
             {
                 opt.Endpoint = new Uri(otelConnectionString);

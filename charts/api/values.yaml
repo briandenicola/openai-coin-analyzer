@@ -8,6 +8,7 @@ APP:
 
 ISTIO:
   GATEWAY                               : "aks-istio-ingress/default-bjdazure-tech-gw"
+  REVISION                              : "asm-1-23"
 
 OPENAI: 
   ENDPOINT                              : ""

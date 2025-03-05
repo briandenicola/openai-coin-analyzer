@@ -11,3 +11,4 @@ ISTIO:
   CLIENT_ID                             : ""
   TENANT_ID                             : ""                         
   KEYVAULT_NAME                         : ""
+  REVISION                              : "asm-1-23"
