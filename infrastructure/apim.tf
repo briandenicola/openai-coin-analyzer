@@ -81,6 +81,6 @@ XML
 resource "azurerm_api_management_subscription" "ric_ui_subscription" {
   api_management_name = azurerm_api_management.this.name
   resource_group_name = azurerm_api_management.this.resource_group_name
-  product_id          = azurerm_api_management_product.ric_api_product.product_id
+  product_id          = azurerm_api_management_product.ric_api_product.id
   display_name        = "Roman Imperial Coin Analyzer UI Subscription"
 }
