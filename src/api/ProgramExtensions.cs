@@ -26,6 +26,7 @@ public static class ProgramExtensions
         builder.Logging.ClearProviders();
         using var loggerFactory = LoggerFactory.Create(builder =>
         {
+            builder.AddConsole();
             builder.AddOpenTelemetry(options =>
             {
                 options.SetResourceBuilder(resourceBuilder);
