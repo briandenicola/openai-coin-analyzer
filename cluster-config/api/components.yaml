@@ -110,11 +110,12 @@ spec:
         host: analyzer-api-svc
         port:
           number: 80
-    corsPolicy:
-      allowOrigins:
-      - "*"
+    corsPolicy:          
       allowMethods:
       - POST
       - PUT
       - GET
       - OPTIONS
+      allowOrigins:
+      - regex: '*.azurestaticapps.net'
+      unmatchedPreflights: FORWARD

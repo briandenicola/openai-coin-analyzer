@@ -86,3 +86,12 @@ spec:
         host: {{ print .Values.APP.NAME "-svc" }}
         port:
           number: 80
+    corsPolicy:          
+      allowMethods:
+      - POST
+      - PUT
+      - GET
+      - OPTIONS
+      allowOrigins:
+      - regex: '*.azurestaticapps.net'
+      unmatchedPreflights: FORWARD
