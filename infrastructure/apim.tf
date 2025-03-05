@@ -25,7 +25,7 @@ resource "azurerm_api_management_api" "ric_api" {
   api_type              = "http"
   revision              = "1"
   display_name          = "Roman Imperial Coin Analyzer"
-  path                  = "ric-api"
+  path                  = "api"
   protocols             = ["http", "https"]
   subscription_required = true
 
