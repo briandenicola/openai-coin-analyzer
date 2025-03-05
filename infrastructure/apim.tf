@@ -25,7 +25,7 @@ resource "azurerm_api_management_api" "ric_api" {
   api_type              = "http"
   revision              = "1"
   display_name          = "Roman Imperial Coin Analyzer"
-  path                  = "api"
+  path                  = local.apim_api_path
   protocols             = ["http", "https"]
   subscription_required = true
 
@@ -83,4 +83,6 @@ resource "azurerm_api_management_subscription" "ric_ui_subscription" {
   resource_group_name = azurerm_api_management.this.resource_group_name
   product_id          = azurerm_api_management_product.ric_api_product.id
   display_name        = "Roman Imperial Coin Analyzer UI Subscription"
+  allow_tracing       = true
+  state               = "active"
 }
