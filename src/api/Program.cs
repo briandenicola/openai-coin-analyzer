@@ -4,8 +4,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(opts =>
 {
-    opts.ListenAnyIP(9091, o => o.Protocols = HttpProtocols.Http1);
-    opts.ListenAnyIP(8080, o => o.Protocols = HttpProtocols.Http1AndHttp2);
+    opts.ListenAnyIP(9090, o => o.Protocols = HttpProtocols.Http1);
+    opts.ListenAnyIP(8080, o => o.Protocols = HttpProtocols.Http1);
 });
 
 builder.AddSemanticKernelConfiguration();
@@ -28,7 +28,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();
-app.MapPrometheusScrapingEndpoint().RequireHost("*:9091");
+app.MapPrometheusScrapingEndpoint().RequireHost("*:9090");
 app.MapHealthChecks("/healthz");
 app.AddDefaultRoute();
 app.AddUploadImageHandler();

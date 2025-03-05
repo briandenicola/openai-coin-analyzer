@@ -28,6 +28,7 @@ resource "azurerm_api_management_api" "ric_api" {
   path                  = local.apim_api_path
   protocols             = ["http", "https"]
   subscription_required = true
+  service_url           = var.custom_domain
 
   #
   # There is a bug in the azurerm provider that causes the API to not be created using "swagger-link-json"
@@ -37,6 +38,7 @@ resource "azurerm_api_management_api" "ric_api" {
   #   content_format = "swagger-link-json"
   #   content_value  = local.swagger_url
   # }
+  #
 }
 
 resource "azurerm_api_management_product_api" "ric_api_product_association" {
@@ -54,30 +56,6 @@ resource "azurerm_api_management_backend" "ric_api_backend" {
   url                 = var.custom_domain
 }
 
-resource "azurerm_api_management_product_policy" "ric_api_product_policy" {
-  product_id          = azurerm_api_management_product.ric_api_product.product_id
-  api_management_name = azurerm_api_management.this.name
-  resource_group_name = azurerm_api_management.this.resource_group_name
-
-  xml_content = <<XML
-  <policies>
-    <inbound>
-        <base />
-    </inbound>
-    <backend>
-        <set-backend-service backend-id="${local.apim_backend_name}" />
-    </backend>
-    <outbound>
-        <base />
-    </outbound>
-    <on-error>
-        <base />
-    </on-error>  
-</policies>
-XML
-
-}
-
 resource "azurerm_api_management_subscription" "ric_ui_subscription" {
   api_management_name = azurerm_api_management.this.name
   resource_group_name = azurerm_api_management.this.resource_group_name
@@ -85,4 +63,14 @@ resource "azurerm_api_management_subscription" "ric_ui_subscription" {
   display_name        = "Roman Imperial Coin Analyzer UI Subscription"
   allow_tracing       = true
   state               = "active"
+}
+
+resource "azurerm_api_management_logger" "this" {
+  name                = "${local.apim_name}-logger"
+  api_management_name = azurerm_api_management.this.name
+  resource_group_name = azurerm_api_management.this.resource_group_name
+
+  application_insights {
+    connection_string = module.azure_monitor.APP_INSIGHTS_CONNECTION_STRING
+  }
 }
