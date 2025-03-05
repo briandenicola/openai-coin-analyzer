@@ -6,7 +6,7 @@ resource "azurerm_static_web_app" "this" {
   sku_tier            = "Free"
 
   app_settings  = {
-    EXPO_PUBLIC_API_URL = "${azurerm_api_management.this.gateway_url}/${local.apim_api_path}"
-    EXPO_PUBLIC_API_KEY = "${azurerm_api_management_subscription.ric_ui_subscription.primary_key}"
+    EXPO_PUBLIC_API_URL = local.app_apim_gateway_url
+    EXPO_PUBLIC_API_KEY = azurerm_api_management_subscription.ric_ui_subscription.primary_key
   }
 }

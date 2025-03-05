@@ -23,4 +23,5 @@ locals {
   apim_backend_name      = "${local.resource_name}-backend"
   apim_api_path          = "api"
   swagger_url            = "https://raw.githubusercontent.com/briandenicola/openai-coin-analyzer/refs/heads/main/docs/swagger.json"
+  app_apim_gateway_url   = "${azurerm_api_management.this.gateway_url}/${local.apim_api_path}/analyze"
 }

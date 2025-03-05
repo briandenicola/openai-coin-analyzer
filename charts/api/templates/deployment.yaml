@@ -93,5 +93,5 @@ spec:
       - GET
       - OPTIONS
       allowOrigins:
-      - regex: '*.azurestaticapps.net'
+      - regex: 'https?://(?:[\w-]+\.)*(azurestaticapps\.net|azure-api\.net)(?:/[\w\-./?%&=]*)?'
       unmatchedPreflights: FORWARD
