@@ -70,7 +70,7 @@ spec:
       serviceAccountName: weasel-3444-app-identity
       containers:
       - name: analyzer-api
-        image:  weasel3444acr.azurecr.io/ric/analyzer-api:8b1c6d9a 
+        image:  weasel3444acr.azurecr.io/ric/analyzer-api:137027aa 
         imagePullPolicy: Always
         securityContext:
           runAsNonRoot: true
