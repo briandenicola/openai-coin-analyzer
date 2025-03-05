@@ -4,7 +4,9 @@ public static partial class AppExtensions
 {
     public static void AddDefaultRoute(this WebApplication app)
     {
-        app.Logger.LogInformation("Default Route Called");
+        var logger = app.Services.GetRequiredService<ILogger<Program>>();
+        logger.LogInformation("Default Route Called");
+        
         app.MapGet( "/", () =>  $"Hello World! The time now is {DateTime.Now}" );
     }
    
@@ -12,7 +14,8 @@ public static partial class AppExtensions
     {
         app.MapGet("/result/{requestId}", (string requestId) =>
         {
-            app.Logger.LogInformation($"result Route Called with {requestId}");
+            var logger = app.Services.GetRequiredService<ILogger<Program>>();
+            logger.LogInformation($"result Route Called with {requestId}");
             return Results.BadRequest(new { Status = "Not Implemented" });
         });  
     }

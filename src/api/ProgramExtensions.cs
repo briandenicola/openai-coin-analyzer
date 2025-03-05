@@ -37,8 +37,14 @@ public static class ProgramExtensions
             });
             builder.SetMinimumLevel(LogLevel.Information);
         });
-
+        _ = builder.Services.AddSingleton<ILoggerFactory>(loggerFactory);
+        
         var otel = builder.Services.AddOpenTelemetry();
+        
+        otel.UseAzureMonitor( o => {  
+                o.ConnectionString = builder.Configuration["APP_INSIGHTS_CONNECTION_STRING"];
+                o.SamplingRatio = 0.1F; 
+            });
 
         otel.ConfigureResource(resource => resource
             .AddService(serviceName: ApplicationName));
@@ -68,5 +74,9 @@ public static class ProgramExtensions
                 opt.Endpoint = new Uri(otelConnectionString);
             })
         );
+
+        ILogger logger = loggerFactory.CreateLogger("Program");
+        logger.LogInformation("OpenTelemetry configured with Azure Monitor");
+        logger.LogInformation($"Application Name: {ApplicationName}");
     }
 }

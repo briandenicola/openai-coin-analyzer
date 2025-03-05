@@ -4,7 +4,7 @@ APP:
   TAG_NAME                              : ""
   URL                                   : "ric.bjdazure.tech"
   PORT                                  : "8080"
-  VERSION                               : "1.0"
+  VERSION                               : "1.0"  
 
 ISTIO:
   GATEWAY                               : "aks-istio-ingress/default-bjdazure-tech-gw"
@@ -12,7 +12,10 @@ ISTIO:
 
 OPENAI: 
   ENDPOINT                              : ""
-  
+
+APP_INSIGHTS:
+  CONNECTION_STRING                     : ""
+ 
 ACR:
   NAME                                  : ""
               

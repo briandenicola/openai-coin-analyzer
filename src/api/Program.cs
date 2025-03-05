@@ -35,5 +35,7 @@ app.AddUploadImageHandler();
 app.AddGetResultsHandler();
 app.UseSwagger();
 
-app.Logger.LogInformation($"{builder.Environment.ApplicationName} - App Run");
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+logger.LogInformation($"{builder.Environment.ApplicationName} - App Run");
+
 app.Run();

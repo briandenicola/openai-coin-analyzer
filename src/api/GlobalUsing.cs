@@ -1,8 +1,5 @@
 global using System;
-global using System.Collections.Concurrent;
-global using System.Collections.Generic;
 
-global using OpenTelemetry;
 global using OpenTelemetry.Metrics;
 global using OpenTelemetry.Trace;
 global using OpenTelemetry.Logs;
@@ -15,16 +12,15 @@ global using Azure.Identity;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Hosting;
-global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Server.Kestrel.Core;
+
+global using Azure.Monitor.OpenTelemetry.AspNetCore;
 
 global using Microsoft.SemanticKernel;
 global using Microsoft.SemanticKernel.ChatCompletion;
 global using Microsoft.SemanticKernel.Connectors.OpenAI;
 
-global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
-global using Microsoft.Extensions.Hosting;
 
 global using ric.analyzer.api;

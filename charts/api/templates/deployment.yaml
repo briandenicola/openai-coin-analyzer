@@ -21,6 +21,10 @@ spec:
         app: {{ .Values.APP.NAME }}
         name: {{ .Values.APP.TAG_NAME }}
         azure.workload.identity/use: "true"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"        
     spec:
       serviceAccountName: {{ .Values.WORKLOAD_ID.NAME }}
       containers:
@@ -35,8 +39,11 @@ spec:
           value: {{ print .Values.OTEL.ENDPOINT }}
         - name: RIC_AOI_ENDPOINT
           value:  {{ print .Values.OPENAI.ENDPOINT }}
+        - name: APP_INSIGHTS_CONNECTION_STRING
+          value: {{ .Values.APP_INSIGHTS.CONNECTION_STRING }}          
         ports:
-        - containerPort: 8080
+        - containerPort: {{ .Values.APP.PORT }}
+        - containerPort: 9090
         resources:
           limits:
             memory: "512Mi"
@@ -57,6 +64,10 @@ spec:
   ports:
   - port: 80
     targetPort: {{ .Values.APP.PORT }}
+    name: web
+  - port: 9090
+    targetPort: 9090
+    name: metrics    
   type: ClusterIP
 ---
 apiVersion: networking.istio.io/v1beta1
