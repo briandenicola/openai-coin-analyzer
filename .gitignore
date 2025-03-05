@@ -5,6 +5,7 @@
 
 # Environment Variables
 .env
+src/ui/.env
 
 # Terraform 
 infrastructure/.terraform/

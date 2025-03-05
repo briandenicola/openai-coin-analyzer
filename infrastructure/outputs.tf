@@ -54,8 +54,13 @@ output "AZURE_STATIC_WEBAPP_NAME" {
 }
 
 output "APIM_GATEWAY" {
-    value = "${azurerm_api_management.this.gateway_url}/${local.apim_api_path}/analyze"
+    value = local.app_apim_gateway_url
     sensitive = false
+}
+
+output "APIM_SUBSCRIPTION_ID" {
+    value = azurerm_api_management_subscription.ric_ui_subscription.primary_key
+    sensitive = true
 }
 
 output "ISTIO_CLIENT_ID" {

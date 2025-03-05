@@ -90,6 +90,7 @@ tasks:
     dir: ./src/ui
     cmds:
       - echo EXPO_PUBLIC_API_URL={{.APIM_GATEWAY}} > .env
+      - echo EXPO_PUBLIC_API_KEY={{.APIM_SUBSCRIPTION_ID}} >> .env
       - npx expo export --platform web
       - cmd: swa deploy --env production --app-location dist --deployment-token {{.DEPLOY_TOKEN}}
         silent: true
@@ -100,6 +101,8 @@ tasks:
         sh: az staticwebapp secrets list --name {{.SWA}} --query "properties.apiKey" -o tsv
       APIM_GATEWAY:
         sh: terraform -chdir=../../infrastructure output -raw APIM_GATEWAY        
+      APIM_SUBSCRIPTION_ID: 2c6f1da6b7e34f389458da0c006f0962
+        #sh: terraform -chdir=../../infrastructure output -raw APIM_SUBSCRIPTION_ID            
 
   deploy:
     desc: Deploys application via Helm/GitOps

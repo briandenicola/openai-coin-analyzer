@@ -1,0 +1,121 @@
+---
+# Source: roman-coin-analyzer/templates/namespaces.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ric
+labels:
+  istio.io/rev: asm-1-23
+---
+# Source: roman-coin-analyzer/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: weasel-3444-app-identity
+  namespace: ric
+  annotations:
+    azure.workload.identity/client-id: efea5300-4cb1-445e-bc62-b6930e24bc92
+    azure.workload.identity/tenant-id: 16b3c013-d300-468d-ac64-7eda0820b6d3
+  labels:
+    azure.workload.identity/use: "true"
+---
+# Source: roman-coin-analyzer/templates/deployment.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: analyzer-api-svc
+  namespace: ric
+spec:
+  selector:
+    app: analyzer-api
+    name: weasel-3444
+  ports:
+  - port: 80
+    targetPort: 8080
+    name: web
+  - port: 9090
+    targetPort: 9090
+    name: metrics    
+  type: ClusterIP
+---
+# Source: roman-coin-analyzer/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: analyzer-api
+  namespace: ric
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: analyzer-api
+      name: weasel-3444
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: analyzer-api
+        name: weasel-3444
+        azure.workload.identity/use: "true"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"        
+    spec:
+      serviceAccountName: weasel-3444-app-identity
+      containers:
+      - name: analyzer-api
+        image:  weasel3444acr.azurecr.io/ric/analyzer-api:137027aa 
+        imagePullPolicy: Always
+        securityContext:
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false 
+        env:
+        - name: RIC_OTEL_ENDPOINT
+          value: http://otel-collector.otel-system.svc.cluster.local:4317
+        - name: RIC_AOI_ENDPOINT
+          value:  https://weasel-3444-openai.openai.azure.com/
+        - name: APP_INSIGHTS_CONNECTION_STRING
+          value: InstrumentationKey=3ce467f7-6b9c-4a9e-88c3-96346822921b;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=77376f1d-ba7d-49cb-a9e2-76f816c283b0          
+        ports:
+        - containerPort: 8080
+        - containerPort: 9090
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "2"
+          requests:
+            memory: "128Mi"
+            cpu: "0.5"
+---
+# Source: roman-coin-analyzer/templates/deployment.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name:  analyzer-api-vs
+  namespace: ric
+spec:
+  hosts:
+  -  "*"
+  gateways:
+  -  aks-istio-ingress/default-bjdazure-tech-gw
+  http:
+  - route:
+    - destination:
+        host: analyzer-api-svc
+        port:
+          number: 80
+    corsPolicy:          
+      allowMethods:
+      - POST
+      - PUT
+      - GET
+      - OPTIONS
+      allowOrigins:
+      - regex: 'https?://(?:[\w-]+\.)*(azurestaticapps\.net|azure-api\.net)(?:/[\w\-./?%&=]*)?'
+      unmatchedPreflights: FORWARD

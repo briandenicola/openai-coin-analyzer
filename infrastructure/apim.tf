@@ -74,3 +74,43 @@ resource "azurerm_api_management_logger" "this" {
     connection_string = module.azure_monitor.APP_INSIGHTS_CONNECTION_STRING
   }
 }
+
+resource "azurerm_api_management_api_policy" "ric_ui_api_policy" {
+  api_name            = azurerm_api_management_api.ric_api.name
+  api_management_name = azurerm_api_management.this.name
+  resource_group_name = azurerm_api_management.this.resource_group_name
+
+  xml_content = <<XML
+    <policies>
+      <inbound>
+          <base />
+          <cors allow-credentials="false">
+              <allowed-origins>
+                  <origin>https://${azurerm_static_web_app.this.default_host_name}</origin>
+              </allowed-origins>
+              <allowed-methods>
+                  <method>GET</method>
+                  <method>POST</method>
+                  <method>PUT</method>
+                  <method>DELETE</method>
+                  <method>HEAD</method>
+                  <method>OPTIONS</method>
+              </allowed-methods>
+              <allowed-headers>
+                  <header>*</header>
+              </allowed-headers>
+          </cors>
+      </inbound>
+      <backend>
+          <base />
+      </backend>
+      <outbound>
+          <base />
+      </outbound>
+      <on-error>
+          <base />
+      </on-error>
+    </policies>
+XML
+
+}
