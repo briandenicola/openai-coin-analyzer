@@ -28,5 +28,4 @@ CERT_PFX_PASS=REPACED_WITH_PASSWORD!!!!!
 ```
 
 # Navigation
-[⏪ Previous Section](../README.md) ‖ [Return to Main Index 🏠](../README.md) ‖ [Next Section ⏩](../docs/infrastructure.md) 
-<p align="right">(<a href="#lets-encrypt-tls-certificates">back to top</a>)</p>
+[⏪ Previous Section](../docs/setup.md) ‖ [Return to Main Index 🏠](../README.md) ‖ [Next Section ⏩](../docs/infrastructure.md) 
