@@ -24,7 +24,7 @@ public static class ProgramExtensions
         var ricActivitySource = new ActivitySource("ric.api");
 
         builder.Logging.ClearProviders();
-        using var loggerFactory = LoggerFactory.Create(builder =>
+        var loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.AddConsole();
             builder.AddOpenTelemetry(options =>
