@@ -6,6 +6,7 @@ public static partial class AppExtensions
     {
         app.MapPost("/analyze", async (HttpRequest request) =>
         {
+            app.Logger.LogInformation("analyze Route Called");
             if (!request.HasFormContentType || !request.Form.Files.Any())
             {
                 return Results.BadRequest("No file uploaded.");
