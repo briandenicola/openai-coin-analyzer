@@ -47,5 +47,5 @@ Azure APIM Managment | API Gateway
 <p align="right">(<a href="#Introduction">Back to Top</a>)</p>
 
 # Navigation
- [Return to Main Index 🏠](../README.md) ‖ [Next Section ⏩](../docs/setup.md) 
+ [Return to Main Index 🏠](./README.md) ‖ [Next Section ⏩](./docs/setup.md) 
 <p align="right">(<a href="#Introduction">Back to Top</a>)</p>
