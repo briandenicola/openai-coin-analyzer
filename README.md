@@ -34,5 +34,7 @@ Azure APIM Managment | API Gateway
 - [ ] Update API to save image to blob storage and return URL in response
 - [ ] Update Front End to display image
 
+
+# Navigation
+ [Return to Main Index 🏠](../README.md) ‖ [Next Section ⏩](../docs/letsencrypt.md) 
 <p align="right">(<a href="#Introduction">Back to Top</a>)</p>
-[Return to Main Index 🏠](../README.md)  ‖ [Next Section ⏩](./docs/setup.md)

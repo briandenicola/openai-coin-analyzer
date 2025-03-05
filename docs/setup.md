@@ -12,21 +12,27 @@
     * Azure Linux VM - Standard_B1s VM will work ($18/month)
     * Windows 11 with [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install)
 * [dotnet 9](https://dotnet.microsoft.com/download) - The .NET Platform
-* [Visual Studio Code](https://code.visualstudio.com/) or equivalent - A lightweight code editor
+* [Visual Studio Code](https://code.visualstudio).com/) or equivalent - A lightweight code editor
 * [Docker](https://www.docker.com/products/docker-desktop) - The Docker Desktop to build/push containers
 * [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - A tool for managing Azure resources
 * [git](https://git-scm.com/) - The source control tool
 * [Taskfile](https://taskfile.dev/#/) - A task runner for the shell
 * [Terraform](https://www.terraform.io/) - A tool for building Azure infrastructure and infrastructure as code
-* A public domain that you can create DNS records
-* [Required Certificates](./docs/letsencrypt.md)
 
-* The following DNS records are required for the application to work correctly.  These are used for the application to be accessed externally.  The following records are required: 
+
+## DNS Records
+* The following DNS records are required for the application to work correctly.  These are used for the application to be accessed externally.  
+* You must own a domain where you have the ability create DNS records.
+* The following records are required: 
     Name | Usage | DNS Record Type | IP Address
     ------ | ---- | ---- | ----
     ric.bjd.demo | APIM Gateway | A | APIM Gateway IP Address in West US
     
 <p align="right">(<a href="#setup-and-deployment">Back to Top</a>)</p>
+
+## Required Certificates
+* The Azure Service Mesh has an External Gateway and required a TLS Certificate. 
+* [This guide](./docs/letsencrypt.md) will walk you through Let's Encrypt with Azure DNS
 
 ## Task
 * The deployment of this application has been automated using [Taskfile](https://taskfile.dev/#/).  This was done instead of using a CI/CD pipeline to make it easier to understand the deployment process.  
@@ -52,7 +58,6 @@ DOMAIN_ROOT | Default root domain used for all URLs & certs | taskfile.yaml | Ye
     * `task deploy`             : Creates application components and deploy the application code
     * `task ui`                 : Deploys Blazor UI components to Azure Static Web Apps
 
-<p align="right">(<a href="#setup-and-deployment">Back to Top</a>)</p>
-
 # Navigation
 [⏪ Previous Section](../README.md) ‖ [Return to Main Index 🏠](../README.md) ‖ [Next Section ⏩](../docs/letsencrypt.md) 
+<p align="right">(<a href="#setup-and-deployment">Back to Top</a>)</p>
