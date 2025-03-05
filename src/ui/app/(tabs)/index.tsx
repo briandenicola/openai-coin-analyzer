@@ -10,13 +10,13 @@ export default function App() {
   // Function to pick an image from the device
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
+      mediaTypes: ['images'],
+      allowsEditing: false,
       quality: 1,
     });
 
     if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
+      setSelectedImage(result.assets[0]);
       setAnalysisResult(null); // Reset previous result
     }
   };
@@ -28,11 +28,7 @@ export default function App() {
     setLoading(true);
     
     let formData = new FormData();
-    formData.append("file", {
-      uri: selectedImage,
-      name: "image.jpg",
-      type: "image/jpeg",
-    });
+    formData.append("file", selectedImage.file, selectedImage.fileName);
 
     try {
       const api_uri = process.env.EXPO_PUBLIC_API_URL;
@@ -41,15 +37,17 @@ export default function App() {
       }
       const response = await fetch(api_uri, {
         method: "POST",
-        headers: {
-          "Content-Type": "multipart/form-data",
+        headers:  {
+          "Accept": "*/*",
           "Ocp-Apim-Subscription-Key": process.env.EXPO_PUBLIC_API_KEY,
+          //"Content-Type": "multipart/form-data",},
         },
         body: formData,
       });
 
-      const result = await response.json();
-      setAnalysisResult(result);
+      const analysis = await response.json();
+      console.log("Analysis result:", analysis);
+      setAnalysisResult(analysis.result);
     } catch (error) {
       console.error("Error analyzing image:", error);
       setAnalysisResult({ error: "Failed to analyze the image." });
@@ -65,7 +63,7 @@ export default function App() {
       <Button title="Select Image" onPress={pickImage} />
       
       {selectedImage && (
-        <Image source={{ uri: selectedImage }} style={styles.image} />
+        <Image source={{ uri: selectedImage.uri }} style={styles.image} />
       )}
 
       {selectedImage && !loading && (
