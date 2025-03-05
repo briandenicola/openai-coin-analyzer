@@ -13,7 +13,7 @@ resource "azurerm_api_management_product" "ric_api_product" {
   resource_group_name   = azurerm_resource_group.app.name
   display_name          = "Roman Imperial Coin Analyzer"
   description           = "Roman Imperial Coin Analyzer"
-  subscription_required = false
+  subscription_required = true
   approval_required     = false
   published             = true
 }
@@ -27,7 +27,7 @@ resource "azurerm_api_management_api" "ric_api" {
   display_name          = "Roman Imperial Coin Analyzer"
   path                  = "ric-api"
   protocols             = ["http", "https"]
-  subscription_required = false
+  subscription_required = true
 
   #
   # There is a bug in the azurerm provider that causes the API to not be created using "swagger-link-json"
@@ -76,4 +76,11 @@ resource "azurerm_api_management_product_policy" "ric_api_product_policy" {
 </policies>
 XML
 
+}
+
+resource "azurerm_api_management_subscription" "ric_ui_subscription" {
+  api_management_name = azurerm_api_management.this.name
+  resource_group_name = azurerm_api_management.this.resource_group_name
+  product_id          = azurerm_api_management_product.ric_api_product.product_id
+  display_name        = "Roman Imperial Coin Analyzer UI Subscription"
 }
