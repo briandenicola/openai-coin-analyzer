@@ -1,0 +1,181 @@
+---
+# Source: roman-coin-analyzer-infra/templates/otel.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: otel-system
+labels:
+  istio.io/rev: asm-1-23
+---
+# Source: roman-coin-analyzer-infra/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: istio-ingress-sa-identity
+  namespace: aks-istio-ingress
+  annotations:
+    azure.workload.identity/client-id: ff964488-5541-4265-a395-b587349d9212 
+    azure.workload.identity/tenant-id: 16b3c013-d300-468d-ac64-7eda0820b6d3 
+  labels:
+    azure.workload.identity/use: "true"
+---
+# Source: roman-coin-analyzer-infra/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-config
+  namespace: otel-system
+data:
+  otel-collector-config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+            
+      zipkin:
+        endpoint: 0.0.0.0:9411
+
+    processors:
+      batch:
+
+    extensions:
+      health_check:
+      pprof:
+        endpoint: :1888
+      zpages:
+        endpoint: :55679
+
+    exporters:
+      debug:
+        verbosity: detailed
+
+      azuremonitor:
+        connection_string: "InstrumentationKey=e79fa893-40c3-4044-a57f-6574012947dd;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=88f703c0-c7c5-4246-abb9-1fffc9128c4b"
+        maxbatchsize: 10
+        maxbatchinterval: 5s
+
+    service:
+      extensions: [health_check]
+      pipelines:
+        traces:
+          receivers: [otlp,zipkin]
+          processors: [batch]
+          exporters: [debug,azuremonitor]
+        metrics:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [debug,azuremonitor]
+        logs:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [debug,azuremonitor]
+---
+# Source: roman-coin-analyzer-infra/templates/otel.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: otel-collector
+  namespace: otel-system
+  labels:
+    component: otel-collector
+spec:
+  ports:
+  - name: grpc
+    port: 4317
+    protocol: TCP
+    targetPort: 4317
+  - name: zipkin
+    port: 9411
+    protocol: TCP
+    targetPort: 9411
+  selector:
+    component: otel-collector
+---
+# Source: roman-coin-analyzer-infra/templates/otel.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-collector
+  namespace: otel-system
+  labels:
+    app: opentelemetry
+    component: otel-collector
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: opentelemetry
+      component: otel-collector
+  template:
+    metadata:
+      labels:
+        app: opentelemetry
+        component: otel-collector
+    spec:
+      containers:
+      - name: otel-collector
+        image: otel/opentelemetry-collector-contrib:0.98.0
+        command:
+        - "/otelcol-contrib"
+        - "--config=/config/otel-collector-config.yaml"
+        resources:
+          limits:
+            cpu: 1
+            memory: 2Gi
+          requests:
+            cpu: 200m
+            memory: 400Mi
+        ports:
+          - containerPort: 9411
+          - containerPort: 4317
+          - containerPort: 13133
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 13133
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 13133
+        volumeMounts:
+        - name: config
+          mountPath: "/config"
+          readOnly: true
+      volumes:
+      - name: config
+        configMap:
+          name: otel-collector-config
+          items:
+          - key: "otel-collector-config.yaml"
+            path: "otel-collector-config.yaml"
+---
+# Source: roman-coin-analyzer-infra/templates/secretsprovider.yaml
+apiVersion: secrets-store.csi.x-k8s.io/v1alpha1
+kind: SecretProviderClass
+metadata:
+  name: istio-tls
+  namespace: aks-istio-ingress
+spec:
+  provider: azure
+  secretObjects:                               
+  - secretName: istio-ingress-tls
+    type: kubernetes.io/tls
+    data: 
+    - objectName: wildcard-certificate
+      key: tls.key
+    - objectName: wildcard-certificate
+      key: tls.crt
+  parameters:
+    usePodIdentity: "false"
+    useVMManagedIdentity: "false"
+    keyvaultName: zebra2141kv 
+    clientID: ff964488-5541-4265-a395-b587349d9212 
+    cloudName: ""                                         
+    objects:  |
+      array:
+        - |
+          objectName: wildcard-certificate
+          objectType: secret
+          objectVersion: ""               # [OPTIONAL] object versions, default to latest if empty
+    tenantId: 16b3c013-d300-468d-ac64-7eda0820b6d3
