@@ -14,27 +14,64 @@ Build & Deployment
 - :two: `task deploy`   - Deploys the application to Azure Kubernetes Service (AKS) using Helm template and Flux/GitOps
 - :three: `task ui`     - Builds and deploys the UI code to Azure Static Web Apps (SWA) using the Azure Static Web Apps CLI
 
-<p align="right">(<a href="#build">back to top</a>)</p>
+<p align="right">(<a href="#build--deployment">back to top</a>)</p>
 
 ## Example Build Step
 ```bash
-➜  openai-coin-analyzer git:(main) ✗ task build
+➜  openai-coin-analyzer git:(main) task build
+task: [branch] git branch weasel-3444 2>>/dev/null || true
+task: [branch] git checkout weasel-3444
+Switched to branch 'weasel-3444'
+Your branch is up to date with 'origin/weasel-3444'.
+task: [build] az acr build -t ric/analyzer-api:6b575834 -r weasel3444acr .
+Packing source code into tar to upload...
+Uploading archived source code from '/tmp/build_archive_24668ee4e5e449c993be1c578c38f9e7.tar.gz'...
+Sending context (51.460 MiB) to registry: weasel3444acr...
+Queued a build with ID: cf2
+Waiting for an agent...
+2025/03/07 16:37:18 Downloading source code...
+2025/03/07 16:37:20 Finished downloading source code
+2025/03/07 16:37:20 Using acb_vol_afd8caed-9113-4b93-85cc-34ea10171453 as the home volume
+...
+2025/03/07 16:40:19
+- image:
+    registry: weasel3444acr.azurecr.io
+    repository: ric/analyzer-api
+    tag: 6b575834
+    digest: sha256:f71d96cd393f70a729b97756bed111263580a7ca26d69d82e8ab9c7ae52b7a6a
+  runtime-dependency:
+    registry: mcr.microsoft.com
+    repository: dotnet/runtime-deps
+    tag: 9.0-azurelinux3.0-distroless
+    digest: sha256:4d90ab65a65566038518b6109bd4c1f83b92afa6c38aca357642e105e7075772
+  buildtime-dependency:
+  - registry: mcr.microsoft.com
+    repository: dotnet/sdk
+    tag: 9.0-noble
+    digest: sha256:12e2373b9ea6f904e0d255a54e65eae31d78ae542dc612baa01fe59198e3e22a
+  git: {}
+
+Run ID: cf2 was successful after 3m1s
+task: [build] git checkout main
+M       docs/code.md
+Already on 'main'
+Your branch is up to date with 'origin/main'.
 ```
-<p align="right">(<a href="#build">back to top</a>)</p>
+<p align="right">(<a href="#build--deployment">back to top</a>)</p>
 
 ## Example Deployment Step
 ```bash
 ➜  openai-coin-analyzer git:(main) ✗ task deploy
 ```
-<p align="right">(<a href="#build">back to top</a>)</p>
+<p align="right">(<a href="#build--deployment">back to top</a>)</p>
 
 # UI Build and Deployment 
 ## Build and Deploy
 ```bash
 ➜  openai-coin-analyzer git:(main) ✗ task ui
 ```
-<p align="right">(<a href="#build">back to top</a>)</p>
+<p align="right">(<a href="#build--deployment">back to top</a>)</p>
 
 # Navigation
 [⏪ Previous Section](../docs/infrastructure.md) ‖ [Return to Main Index 🏠](../Readme.md) ‖ [Next Section ⏩](../docs/testing.md) 
-<p align="right">(<a href="#build">back to top</a>)</p>
+<p align="right">(<a href="#build--deployment">back to top</a>)</p>
