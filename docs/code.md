@@ -53,7 +53,6 @@ Waiting for an agent...
 
 Run ID: cf2 was successful after 3m1s
 task: [build] git checkout main
-M       docs/code.md
 Already on 'main'
 Your branch is up to date with 'origin/main'.
 ```
@@ -62,6 +61,29 @@ Your branch is up to date with 'origin/main'.
 ## Example Deployment Step
 ```bash
 ➜  openai-coin-analyzer git:(main) ✗ task deploy
+task: [branch] git branch weasel-3444 2>>/dev/null || true
+task: [branch] git checkout weasel-3444
+Switched to branch 'weasel-3444'
+Your branch is up to date with 'origin/weasel-3444'.
+task: [deploy] helm template ric-analyzer --set ACR.NAME="weasel3444acr.azurecr.io" --set APP.VERSION=486d058a --set APP.TAG_NAME=weasel-3444 --set WORKLOAD_ID.NAME=weasel-3444-app-identity --set WORKLOAD_ID.CLIENT_ID=9b98e3e7-5e12-4a12-b377-7b3349cd4939 --set WORKLOAD_ID.TENANT_ID=16b3c013-d300-468d-ac64-7eda0820b6d3 --set APP_INSIGHTS.CONNECTION_STRING="InstrumentationKey=REDACTED;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=REDACTED" --set OPENAI.ENDPOINT=https://weasel-3444-openai.openai.azure.com/ ./charts/api > ./cluster-config/api/components.yaml
+task: [deploy] git add ./cluster-config/api/components.yaml || true
+task: [deploy] git commit -m "[Fri Mar  7 10:43:36 CST 2025] - Updates for weasel-3444 app 🤖🤖🤖 components" || true
+[weasel-3444 6bfb8e7] [Fri Mar  7 10:43:36 CST 2025] - Updates for weasel-3444 app 🤖🤖🤖 components
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+task: [deploy] git push --set-upstream origin weasel-3444 || true
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 521 bytes | 521.00 KiB/s, done.
+Total 5 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+To github.com:briandenicola/openai-coin-analyzer.git
+   5adc99e..6bfb8e7  weasel-3444 -> weasel-3444
+Branch 'weasel-3444' set up to track remote branch 'weasel-3444' from 'origin'.
+task: [deploy] git checkout main
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
 ```
 <p align="right">(<a href="#build--deployment">back to top</a>)</p>
 
@@ -69,6 +91,25 @@ Your branch is up to date with 'origin/main'.
 ## Build and Deploy
 ```bash
 ➜  openai-coin-analyzer git:(main) ✗ task ui
+task: [ui] echo EXPO_PUBLIC_API_URL=https://weasel-3444-apim.azure-api.net/api/analyze > .env
+task: [ui] echo EXPO_PUBLIC_API_KEY=REDACTED >> .env
+task: [ui] npx expo export --platform web
+env: load .env
+env: export EXPO_PUBLIC_API_URL EXPO_PUBLIC_API_KEY
+Starting Metro Bundler
+Static rendering is enabled. Learn more: https://docs.expo.dev/router/reference/static-rendering/
+λ Bundled 1173ms node_modules/expo-router/node/render.js (744 modules)
+Web Bundled 1640ms node_modules/expo-router/entry.js (834 modules)
+
+› web bundles (1):
+_expo/static/js/web/entry-9fc11802e244dc00739b378e7cbe4ac4.js (1.5 MB)
+...
+Deploying to environment: production
+
+Deploying project to Azure Static Web Apps...
+✔ Project deployed to https://white-rock-0d379ea10.6.azurestaticapps.net 🚀
+
+➜  openai-coin-analyzer git:(main) ✗ 
 ```
 <p align="right">(<a href="#build--deployment">back to top</a>)</p>
 
