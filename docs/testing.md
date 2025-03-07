@@ -6,16 +6,16 @@ Testing
 * Windows Subsystem for Linux (WSL) is recommended
 
 ## Tasks
-* local:apply:          Applies Terraform configuration for Roman Imperial Coin Analyzer (local)
-* local:down:           Destroys all resources and cleans up Terraform for Roman Imperial Coin Analyzer (local)
-* local:run:            Starts Aspire Dashboard and compiles/runs API (local)
-* local:up:             Creates a simple Azure environment for Roman Imperial Coin Analyzer (local)
-* local:validate:       Runs the script ./scripts/validate.sh to test running API  (local)
+* local:apply:          - Applies Terraform configuration for Roman Imperial Coin Analyzer (local)
+* local:down:           - Destroys all resources and cleans up Terraform for Roman Imperial Coin Analyzer (local)
+* local:run:            - Starts Aspire Dashboard and compiles/runs API (local)
+* local:up:             - Creates a simple Azure environment for Roman Imperial Coin Analyzer (local)
+* local:validate:       - Runs the script ./scripts/validate.sh to test running API  (local)
 
 ### :heavy_check_mark: Steps
-- :one: `task local:up`     - Build the environment 
-- :one: `task local:run`    - Builds the API and Runs the Aspire Dashboard container
-- :one: `task local:run`    - Build the environment 
+- :one: `task local:up`        - Build the environment 
+- :one: `task local:run`       - Builds the API and Runs the Aspire Dashboard container
+- :one: `task local:validate`  - Runs the script - ./scripts/validate.sh which sends the image ./images/coin.png to the API for testing
 
 ## Example Deployment
 ```bash
