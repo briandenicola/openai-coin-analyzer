@@ -19,11 +19,10 @@
 * [Taskfile](https://taskfile.dev/#/) - A task runner for the shell
 * [Terraform](https://www.terraform.io/) - A tool for building Azure infrastructure and infrastructure as code
 
-
 ## DNS Records
 * The following DNS records are required for the application to work correctly.  These are used for the application to be accessed externally.  
 * You must own a domain where you have the ability create DNS records.
-* The following records are required: 
+* The following records are required __replace bjd.demo with your domain name__: 
     Name | Usage | DNS Record Type | IP Address
     ------ | ---- | ---- | ----
     ric.bjd.demo | APIM Gateway | A | APIM Gateway IP Address in West US
@@ -31,7 +30,7 @@
 <p align="right">(<a href="#setup-and-deployment">Back to Top</a>)</p>
 
 ## Required Certificates
-* The Azure Service Mesh has an External Gateway and required a TLS Certificate. 
+* The Azure Service Mesh has an External Gateway and requires a TLS Certificate. 
 * [This guide](./docs/letsencrypt.md) will walk you through Let's Encrypt with Azure DNS
 
 <p align="right">(<a href="#setup-and-deployment">Back to Top</a>)</p>
@@ -47,18 +46,32 @@
 
 Name | Usage | Location | Required | Default or Example Value
 ------ | ------ | ------ | ------ | ------
-TITLE | Value used in Azure Tags | taskfile.yaml | Yes | CQRS Multi-region Pattern in Azure
-DEFAULT_REGIONS | Default region to deploy to | taskfile.yaml | Yes | ["westus3"]
-DOMAIN_ROOT | Default root domain used for all URLs & certs | taskfile.yaml | Yes | bjd.demo
+TITLE | Value used in Azure Tags | taskfile.yaml | Yes | Roman Imperial Coin Analyzer
+DEFAULT_REGION | Default region to deploy to | taskfile.yaml | Yes | canadacentral
+DEFAULT_DOMAIN | Default domain used for all URLs & certs | taskfile.yaml | Yes | bjd.demo
+COUNT | Number of replicas for the application | taskfile.yaml | No | 2
+HELM_CHART | Helm Chart to use for deployment | taskfile.yaml | No | ric-analyzer
+SKU | SKU for the nodes in AKS | taskfile.yaml | No | Standard_D4ads_v5
 
 ### Task Commands
 * Running the `task` command without any options will run the default command. This will list all the available tasks.
-    * `task up`                 : Builds complete environment
-    * `task down`               : Destroys all Azure resources and cleans up Terraform
-    * `task apply`              : Applies the Terraform configuration for the core components
-    * `task build`              : Builds containers and pushes to Azure Container Registry
-    * `task deploy`             : Creates application components and deploy the application code
-    * `task ui`                 : Deploys Blazor UI components to Azure Static Web Apps
+    * build:                Builds application via ACR tasks
+    * certs:                Deploys Istio Certificate and Otel infrastructure via Helm/GitOps
+    * creds:                Gets credential file for newly created AKS cluster
+    * deploy:               Deploys application via Helm/GitOps
+    * dns:                  Gets the IP Address of the Istio Gateway
+    * down:                 Destroys all Azure resources and cleans up Terraform
+    * hubble:               Install Hubble Dashboard for Network Observability
+    * init:                 Initializes Terraform for Roman Imperial Coin Analyzer
+    * restart:              Performs a rollout restart on all deployments in eshop namespace
+    * status:               Gets the overall status of the cluster
+    * ui:                   Builds and Deploys the UI code to Azure Static Web Apps
+    * up:                   Creates complete Azure environment for Roman Imperial Coin Analyzer
+    * local:apply:          Applies Terraform configuration for Roman Imperial Coin Analyzer (local)
+    * local:down:           Destroys all resources and cleans up Terraform for Roman Imperial Coin Analyzer (local)
+    * local:run:            Starts Aspire Dashboard and compiles/runs API (local)
+    * local:up:             Creates a simple Azure environment for Roman Imperial Coin Analyzer (local)
+    * local:validate:       Runs the script ./scripts/validate.sh to test running API  (local)
 <p align="right">(<a href="#setup-and-deployment">Back to Top</a>)</p>
 
 # Navigation

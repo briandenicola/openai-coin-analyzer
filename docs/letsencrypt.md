@@ -23,7 +23,7 @@ acme.sh --toPkcs -d ric.bjd.demo --password $PfxPASSWORD
 ## Example ENV File
 ```bash
 ➜  git:(main) ✗ cat .env
-CERT_PATH=/home/brian/working/api.ingress.bjd.demo.pfx
+CERT_PATH=/home/brian/working/ric.bjd.demo.pfx
 CERT_PFX_PASS=REPACED_WITH_PASSWORD!!!!!
 ```
 

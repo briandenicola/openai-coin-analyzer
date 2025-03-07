@@ -25,6 +25,12 @@ Azure APIM Managment | API Gateway
 ![UI](./images/architecture.png)
 <p align="right">(<a href="#Introduction">Back to Top</a>)</p>
 
+## Design Questions and Challenges
+* :question: What are some ways to improve the performance of the application?
+* :question: How can we ensure the security of the application?
+* :question: Azure WAF for AI applications recommends placing an Azure API Management (APIM) in front of the Azure OpenAI Service. How can we implement this - should this differ than the current APIM deployed?
+* :question: Calls to Azure OpenAI can take a long time to process. How can we leverage other services such as Azure WebPub improve responsiveness of the application?
+
 # Setup
 * The environment can setup following the steps in the [Setup and Deployment](./docs/setup.md) document.  
 * The setup process will create all the required resources and deploy the application code to Azure.
@@ -40,7 +46,7 @@ Azure APIM Managment | API Gateway
 - [x] Deployment to AKS
 - [x] End to End Testing
 - [x] Architecture Diagram
-- [ ] Updated Documentation
+- [x] Updated Documentation
 - [ ] Update API to save image to blob storage and return URL in response
 - [ ] Update Front End to display image
 - [ ] Update Front End to display details of the OpenAI calls

@@ -34,15 +34,22 @@ tasks:
   up:
     desc: Creates complete Azure environment for {{.TITLE}}
     cmds:
-      - terraform -chdir=./infrastructure workspace new {{.REGION}} || true
-      - terraform -chdir=./infrastructure workspace select {{.REGION}}
-      - terraform -chdir=./infrastructure init
+      - task: init
       - task: apply
       - task: creds
       - task: certs
       - task: build
       - task: deploy
       - task: dns
+    vars:
+      REGION: "{{default .DEFAULT_REGION .CLI_ARGS}}"
+
+  init:
+    desc: Initializes Terraform for {{.TITLE}}
+    cmds:
+      - terraform -chdir=./infrastructure workspace new {{.REGION}} || true
+      - terraform -chdir=./infrastructure workspace select {{.REGION}}
+      - terraform -chdir=./infrastructure init
     vars:
       REGION: "{{default .DEFAULT_REGION .CLI_ARGS}}"
 
