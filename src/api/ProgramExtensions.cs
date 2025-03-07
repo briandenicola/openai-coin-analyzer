@@ -12,13 +12,12 @@ public static class ProgramExtensions
         builder.Services.AddSingleton<Kernel>(kernel);
     }
 
-    public static void AddCustomOtelConfiguration(this WebApplicationBuilder builder, string ApplicationName, string otelConnectionString)
+    public static void AddCustomOtelConfiguration(this WebApplicationBuilder builder, string ApplicationName, string otelConnectionString, string azMonitorConnectionString)
     {
         AppContext.SetSwitch("Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnosticsSensitive", true);
         var resourceBuilder = ResourceBuilder
             .CreateDefault()
             .AddService("RomanImperialCoinAnalyzer");
-
 
         var ricApiMeter = new Meter("Roman Imperial Coin Analyzer", "2.0.0");
         var ricActivitySource = new ActivitySource("ric.api");
@@ -42,7 +41,7 @@ public static class ProgramExtensions
         var otel = builder.Services.AddOpenTelemetry();
         
         otel.UseAzureMonitor( o => {  
-                o.ConnectionString = builder.Configuration["APP_INSIGHTS_CONNECTION_STRING"];
+                o.ConnectionString = azMonitorConnectionString;
                 o.SamplingRatio = 0.1F; 
             });
 

@@ -12,7 +12,8 @@ builder.AddSemanticKernelConfiguration();
 
 builder.AddCustomOtelConfiguration(
     Constants.APP_NAME,
-    Constants.OTEL_ENDPOINT
+    Constants.OTEL_ENDPOINT,
+    Constants.APP_INSIGHTS_ENDPOINT
 );
 
 builder.Services.AddCors(options =>

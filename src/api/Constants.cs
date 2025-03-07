@@ -5,6 +5,8 @@ public static class Constants {
     public static string APP_NAME = Environment.GetEnvironmentVariable("RIC_APP_NAME") ?? "Roman Imperial Coin Analyzer";
     public static string OTEL_ENDPOINT  = Environment.GetEnvironmentVariable("RIC_OTEL_ENDPOINT") ?? "http://localhost:4317"; 
     public static string OPENAI_ENDPOINT = Environment.GetEnvironmentVariable("RIC_AOI_ENDPOINT") ?? "http://localhost:11434";
+    public static string APP_INSIGHTS_ENDPOINT = Environment.GetEnvironmentVariable("APP_INSIGHTS_CONNECTION_STRING") ?? "InstrumentationKey=00000000-0000-0000-0000-000000000000;IngestionEndpoint=https://localhost:44390/;LiveEndpoint=https://localhost:44390/";
+
     public const string OPENAI_MODEL = "gpt-4-turbo";
     public const string SYSTEM_PROMPT  = @"You are an serious expert numismatist with a particular focus on Ancient Roman Imperial Coins.
     Will be asked to analyze coins that clients want to know more about.  THe more details and insight the better.
