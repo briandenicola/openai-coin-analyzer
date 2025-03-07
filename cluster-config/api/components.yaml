@@ -70,7 +70,7 @@ spec:
       serviceAccountName: zebra-2141-app-identity
       containers:
       - name: analyzer-api
-        image:  zebra2141acr.azurecr.io/ric/analyzer-api:32b709db 
+        image:  zebra2141acr.azurecr.io/ric/analyzer-api:486d058a 
         imagePullPolicy: Always
         securityContext:
           runAsNonRoot: true
