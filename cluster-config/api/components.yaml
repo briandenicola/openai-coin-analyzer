@@ -1,0 +1,121 @@
+---
+# Source: roman-coin-analyzer/templates/namespaces.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ric
+labels:
+  istio.io/rev: asm-1-23
+---
+# Source: roman-coin-analyzer/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: zebra-2141-app-identity
+  namespace: ric
+  annotations:
+    azure.workload.identity/client-id: 9b98e3e7-5e12-4a12-b377-7b3349cd4939
+    azure.workload.identity/tenant-id: 16b3c013-d300-468d-ac64-7eda0820b6d3
+  labels:
+    azure.workload.identity/use: "true"
+---
+# Source: roman-coin-analyzer/templates/deployment.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: analyzer-api-svc
+  namespace: ric
+spec:
+  selector:
+    app: analyzer-api
+    name: zebra-2141
+  ports:
+  - port: 80
+    targetPort: 8080
+    name: web
+  - port: 9090
+    targetPort: 9090
+    name: metrics    
+  type: ClusterIP
+---
+# Source: roman-coin-analyzer/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: analyzer-api
+  namespace: ric
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: analyzer-api
+      name: zebra-2141
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: analyzer-api
+        name: zebra-2141
+        azure.workload.identity/use: "true"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"        
+    spec:
+      serviceAccountName: zebra-2141-app-identity
+      containers:
+      - name: analyzer-api
+        image:  zebra2141acr.azurecr.io/ric/analyzer-api:32b709db 
+        imagePullPolicy: Always
+        securityContext:
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false 
+        env:
+        - name: RIC_OTEL_ENDPOINT
+          value: http://otel-collector.otel-system.svc.cluster.local:4317
+        - name: RIC_AOI_ENDPOINT
+          value:  https://zebra-2141-openai.openai.azure.com/
+        - name: APP_INSIGHTS_CONNECTION_STRING
+          value: InstrumentationKey=e79fa893-40c3-4044-a57f-6574012947dd;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=88f703c0-c7c5-4246-abb9-1fffc9128c4b          
+        ports:
+        - containerPort: 8080
+        - containerPort: 9090
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "2"
+          requests:
+            memory: "128Mi"
+            cpu: "0.5"
+---
+# Source: roman-coin-analyzer/templates/deployment.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name:  analyzer-api-vs
+  namespace: ric
+spec:
+  hosts:
+  -  "*"
+  gateways:
+  -  aks-istio-ingress/default-bjdazure-tech-gw
+  http:
+  - route:
+    - destination:
+        host: analyzer-api-svc
+        port:
+          number: 80
+    corsPolicy:          
+      allowMethods:
+      - POST
+      - PUT
+      - GET
+      - OPTIONS
+      allowOrigins:
+      - regex: 'https?://(?:[\w-]+\.)*(azurestaticapps\.net|azure-api\.net)(?:/[\w\-./?%&=]*)?'
+      unmatchedPreflights: FORWARD
