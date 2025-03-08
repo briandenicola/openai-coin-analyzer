@@ -10,7 +10,7 @@ using the [Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/cogniti
 Component | Usage
 ------ | ------
 Azure Kubernetes Service | Container Orchestration Runtime Platform  
-Azure Blob Storage | Podcast Storage 
+Azure Blob Storage | Image Storage 
 Azure OpenAI Service | Service that analyze the coin
 Azure Static Web Apps | Hosting platform for React Native UI
 Azure Key Vault | Secret store 
