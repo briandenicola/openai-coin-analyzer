@@ -26,7 +26,7 @@ public class OpenAI
         
         var  requestSettings = new OpenAIPromptExecutionSettings()
         {
-            MaxTokens = 4096,    
+            //MaxCompletionTokens = 4096,
         };
 
         var history = new ChatHistory();

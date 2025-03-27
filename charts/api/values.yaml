@@ -12,7 +12,8 @@ ISTIO:
 
 OPENAI: 
   ENDPOINT                              : ""
-
+  MODEL_NAME                            : "o1"
+  
 APP_INSIGHTS:
   CONNECTION_STRING                     : ""
  

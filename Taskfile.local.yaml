@@ -2,7 +2,7 @@ version: "3"
 
 vars:
   LOCAL_TITLE: Roman Imperial Coin Analyzer (local)
-  DEFAULT_REGION: "westus"
+  DEFAULT_REGION: eastus2
 
 tasks:  
   default:

@@ -40,7 +40,9 @@ spec:
         - name: RIC_AOI_ENDPOINT
           value:  {{ print .Values.OPENAI.ENDPOINT }}
         - name: APP_INSIGHTS_CONNECTION_STRING
-          value: {{ .Values.APP_INSIGHTS.CONNECTION_STRING }}          
+          value: {{ .Values.APP_INSIGHTS.CONNECTION_STRING }}   
+        - name: AOI_MODEL_NAME
+          value: {{ .Values.OPENAI.MODEL_NAME }}       
         ports:
         - containerPort: {{ .Values.APP.PORT }}
         - containerPort: 9090

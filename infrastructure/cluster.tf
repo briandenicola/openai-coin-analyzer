@@ -11,7 +11,7 @@ module "cluster" {
     name                 = local.aks_name
     authorized_ip_ranges = "${local.home_ip_address}/32"
     public_key_openssh   = tls_private_key.rsa.public_key_openssh
-    zones                = ["1", "2", "3"]
+    zones                = ["2"]
     resource_group = {
       name = azurerm_resource_group.this.name
       id   = azurerm_resource_group.this.id
