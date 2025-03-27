@@ -10,33 +10,33 @@ resource "azurerm_key_vault" "this" {
   sku_name = "standard"
 }
 
-# resource "azurerm_key_vault_certificate" "this" {
-#   name         = var.aks_cluster.certificate.name 
-#   key_vault_id = azurerm_key_vault.this.id
+resource "azurerm_key_vault_certificate" "this" {
+  name         = var.aks_cluster.certificate.name 
+  key_vault_id = azurerm_key_vault.this.id
 
-#   depends_on = [
-#     azurerm_role_assignment.deployer_kv_access
-#   ]
+  depends_on = [
+    azurerm_role_assignment.deployer_kv_access
+  ]
 
-#   certificate {
-#     contents = var.aks_cluster.certificate.contents
-#     password = var.aks_cluster.certificate.password
-#   }
+  certificate {
+    contents = var.aks_cluster.certificate.contents
+    password = var.aks_cluster.certificate.password
+  }
 
-#   certificate_policy {
-#     issuer_parameters {
-#       name = "Self"
-#     }
+  certificate_policy {
+    issuer_parameters {
+      name = "Self"
+    }
 
-#     key_properties {
-#       exportable = true
-#       key_size   = 2048
-#       key_type   = "RSA"
-#       reuse_key  = false
-#     }
+    key_properties {
+      exportable = true
+      key_size   = 2048
+      key_type   = "RSA"
+      reuse_key  = false
+    }
 
-#     secret_properties {
-#       content_type = "application/x-pkcs12"
-#     }
-#   }
-# }
+    secret_properties {
+      content_type = "application/x-pkcs12"
+    }
+  }
+}
