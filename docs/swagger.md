@@ -20,10 +20,15 @@ API Management
 <p align="right">(<a href="#api-management">Back to Top</a>)</p>
 
 ## Step 2
-* Provide the URL for the Swagger.json file or upload the file from your local machine.
+* Provide the URL for the [Swagger.json](https://raw.githubusercontent.com/briandenicola/openai-coin-analyzer/refs/heads/main/docs/swagger.json) file or upload the file from your local machine.
 * Select 'Append'
 * Click 'Import'
 * ![step2](../images/apim-step2.png)
+<p align="right">(<a href="#api-management">Back to Top</a>)</p>
+
+## Step 2b
+* Check the backend URL for the correct API. The import might have changed the URL from the default APIM URL to GitHub URL. 
+* Confirm its https://ric.${DEFAULT_DOMAIN_NAME}
 <p align="right">(<a href="#api-management">Back to Top</a>)</p>
 
 # Result

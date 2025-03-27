@@ -97,8 +97,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: 600,
+    height: 300,
     marginTop: 10,
     borderRadius: 10,
   },

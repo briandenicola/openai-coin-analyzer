@@ -2,11 +2,11 @@
 This project is a demonstration on how to use Azure OpenAI. It takes an uploaded image of a Roman Imperial Coin and analyzes it Azure OpenAI
 using the [Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/overview?tabs=python) and the 'gpt-4-turbo' model. The application is built using a microservices architecture and deployed to Azure Kubernetes Service (AKS) with Azure Static Web Apps (SWA) for the front end.
 
-## Example o1 Analysis 
-![UI](./images/example-o1.png)
+## Example 
+| o1 Analysis | GTP-4 Analysis |
+| ----------- | --------------- |
+| ![UI](./images/example-o1.png) | ![UI](./images/example.png) |
 
-## Example GTP-4 Analysis 
-![UI](./images/example.png)
 <p align="right">(<a href="#Introduction">Back to Top</a>)</p>
 
 ## Components

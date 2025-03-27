@@ -31,7 +31,7 @@ resource "azurerm_key_vault_certificate" "this" {
     key_properties {
       exportable = true
       key_size   = 2048
-      key_type   = "RSA"
+      key_type   = "EC"
       reuse_key  = false
     }
 
