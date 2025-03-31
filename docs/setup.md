@@ -42,36 +42,42 @@
 * The [Taskfile](../Taskfile.yaml) definition is located in the root of the repository
 * The Task file declares the default values that can be updated to suit specific requirements: 
 
-### Taskfile Variables
+### Variables
+* The following variables are defined in the Taskfile.  
+* The default values are set in the Taskfile and can be overridden by setting them in the environment or in a `.env` file.  
+* The `.env` file is not checked into source control. 
+    | Name | Usage | Location | Required | Default or Example Value
+    | ------ | ------ | ------ | ------ | ------
+    TITLE | Value used in Azure Tags | taskfile.yaml | Yes | Roman Imperial Coin Analyzer
+    DEFAULT_REGION | Default region to deploy to | taskfile.yaml | Yes | canadacentral
+    DEFAULT_DOMAIN | Default domain used for all URLs & certs | taskfile.yaml | Yes | bjd.demo
+    COUNT | Number of replicas for the application | taskfile.yaml | No | 2
+    HELM_CHART | Helm Chart to use for deployment | taskfile.yaml | No | ric-analyzer
+    SKU | SKU for the nodes in AKS | taskfile.yaml | No | Standard_D4ads_v5
+    CERT_PATH | Path to the certificate file | taskfile.yaml |Yes | ./certs/ric.bjd.demo.pfx
+    CERT_PASS | Password for the certificate file | taskfile.yaml | Yes | password
 
-Name | Usage | Location | Required | Default or Example Value
------- | ------ | ------ | ------ | ------
-TITLE | Value used in Azure Tags | taskfile.yaml | Yes | Roman Imperial Coin Analyzer
-DEFAULT_REGION | Default region to deploy to | taskfile.yaml | Yes | canadacentral
-DEFAULT_DOMAIN | Default domain used for all URLs & certs | taskfile.yaml | Yes | bjd.demo
-COUNT | Number of replicas for the application | taskfile.yaml | No | 2
-HELM_CHART | Helm Chart to use for deployment | taskfile.yaml | No | ric-analyzer
-SKU | SKU for the nodes in AKS | taskfile.yaml | No | Standard_D4ads_v5
-
-### Task Commands
+### Commands
 * Running the `task` command without any options will run the default command. This will list all the available tasks.
-    * build:                Builds application via ACR tasks
-    * certs:                Deploys Istio Certificate and Otel infrastructure via Helm/GitOps
-    * creds:                Gets credential file for newly created AKS cluster
-    * deploy:               Deploys application via Helm/GitOps
-    * dns:                  Gets the IP Address of the Istio Gateway
-    * down:                 Destroys all Azure resources and cleans up Terraform
-    * hubble:               Install Hubble Dashboard for Network Observability
-    * init:                 Initializes Terraform for Roman Imperial Coin Analyzer
-    * restart:              Performs a rollout restart on all deployments in eshop namespace
-    * status:               Gets the overall status of the cluster
-    * ui:                   Builds and Deploys the UI code to Azure Static Web Apps
-    * up:                   Creates complete Azure environment for Roman Imperial Coin Analyzer
-    * local:apply:          Applies Terraform configuration for Roman Imperial Coin Analyzer (local)
-    * local:down:           Destroys all resources and cleans up Terraform for Roman Imperial Coin Analyzer (local)
-    * local:run:            Starts Aspire Dashboard and compiles/runs API (local)
-    * local:up:             Creates a simple Azure environment for Roman Imperial Coin Analyzer (local)
-    * local:validate:       Runs the script ./scripts/validate.sh to test running API  (local)
+    | Task |  Description | 
+    | ------ | ------ |
+    `task build` |              Builds application via ACR tasks
+    `task certs` |              Deploys Istio Certificate and Otel infrastructure via Helm/GitOps
+    `task creds` |              Gets credential file for newly created AKS cluster
+    `task deploy` |             Deploys application via Helm/GitOps
+    `task dns` |                Gets the IP Address of the Istio Gateway
+    `task down` |               Destroys all Azure resources and cleans up Terraform
+    `task hubble` |             Install Hubble Dashboard for Network Observability
+    `task init` |               Initializes Terraform for Roman Imperial Coin Analyzer
+    `task restart` |            Performs a rollout restart on all deployments in eshop namespace
+    `task status` |             Gets the overall status of the cluster
+    `task ui` |                 Builds and Deploys the UI code to Azure Static Web Apps
+    `task up` |                 Creates complete Azure environment for Roman Imperial Coin Analyzer
+    `task local:apply` |        Applies Terraform configuration for Roman Imperial Coin Analyzer (local)
+    `task local:down` |         Destroys all resources and cleans up Terraform for Roman Imperial Coin Analyzer (local)
+    `task local:run` |          Starts Aspire Dashboard and compiles/runs API (local)
+    `task local:up` |           Creates a simple Azure environment for Roman Imperial Coin Analyzer (local)
+    `task local:validate` |     Runs the script ./scripts/validate.sh to test running API  (local)
 <p align="right">(<a href="#setup-and-deployment">Back to Top</a>)</p>
 
 # Navigation
