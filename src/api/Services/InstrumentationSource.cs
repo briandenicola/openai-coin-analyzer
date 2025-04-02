@@ -11,15 +11,16 @@ public sealed class InstrumentationSource : IDisposable
 
     public InstrumentationSource()
     {
-        var version = typeof(InstrumentationSource).Assembly.GetName().Version?.ToString();
-        ActivitySource = new ActivitySource(ActivitySourceName, version);
-        meter = new Meter(MeterName, version);
+        ActivitySource = new ActivitySource(ActivitySourceName, Version);
+        meter = new Meter(MeterName, Version);
         AnalyzeRequestCounter = meter.CreateCounter<long>("analyze.count", description: "Counts the number of requests to analyze images");
     }
 
     public ActivitySource ActivitySource { get; }
 
     public Counter<long> AnalyzeRequestCounter { get; }
+
+    public string Version { get; } = typeof(InstrumentationSource).Assembly.GetName().Version?.ToString() ?? "0.0.0";
 
     public void Dispose()
     {

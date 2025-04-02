@@ -39,7 +39,5 @@ app.AddUploadImageHandler(logger, instrumentationSource);
 app.AddGetResultsHandler();
 app.UseSwagger();
 
-
-logger.LogInformation($"{builder.Environment.ApplicationName} - App Run");
-
+logger.LogInformation($"{Constants.APP_NAME} ({instrumentationSource.Version}) - Started...");
 app.Run();
