@@ -101,7 +101,7 @@ tasks:
       - echo EXPO_PUBLIC_API_KEY={{.APIM_SUBSCRIPTION_ID}} >> .env
       - source .env
       - npm install
-      - npx expo export --platform web
+      - npx expo export --platform web -c
       - cmd: swa deploy --env production --app-location dist --deployment-token {{.DEPLOY_TOKEN}}
         silent: true
     vars:
