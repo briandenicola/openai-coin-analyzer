@@ -11,7 +11,6 @@ builder.AddSemanticKernelConfiguration();
 builder.AddCustomOtelConfiguration(
     Constants.APP_NAME,
     Constants.OTEL_ENDPOINT,
-    Constants.APP_INSIGHTS_ENDPOINT,
     InstrumentationSource.ActivitySourceName
 );
 
@@ -35,7 +34,7 @@ var instrumentationSource = app.Services.GetRequiredService<InstrumentationSourc
 app.MapPrometheusScrapingEndpoint().RequireHost("*:9090");
 app.MapHealthChecks("/healthz");
 app.AddDefaultRoute();
-app.AddUploadImageHandler(logger, instrumentationSource);
+app.AddUploadImageHandler();
 app.AddGetResultsHandler();
 app.UseSwagger();
 

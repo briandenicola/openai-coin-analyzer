@@ -15,8 +15,7 @@ public static class ProgramExtensions
     public static void AddCustomOtelConfiguration(
         this WebApplicationBuilder builder, 
         string ApplicationName, 
-        string otelConnectionString, 
-        string azMonitorConnectionString,
+        string otelConnectionString,
         string ricActivitySourceName)
     {
         AppContext.SetSwitch("Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnosticsSensitive", true);
@@ -42,11 +41,6 @@ public static class ProgramExtensions
         
         var otel = builder.Services.AddOpenTelemetry();
         
-        otel.UseAzureMonitor( o => {  
-                o.ConnectionString = azMonitorConnectionString;
-                o.SamplingRatio = 0.1F; 
-            });
-
         otel.ConfigureResource(resource => resource
             .AddService(serviceName: ApplicationName));
 

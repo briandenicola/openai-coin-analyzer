@@ -12,7 +12,7 @@ public class RicAIService
         return readOnlyMemory;
     }
 
-    public static async Task<string> AnalyzeImage(Kernel kernel, IFormFile coinImage, ILogger logger, InstrumentationSource instrumentationSource)
+    public static async Task<string> AnalyzeImage(Kernel kernel, IFormFile coinImage, ILogger logger)
     {
         if (coinImage == null || coinImage.Length == 0)
         {
@@ -20,10 +20,8 @@ public class RicAIService
             throw new ArgumentException("No file uploaded.");
         }
 
-        instrumentationSource.AnalyzeRequestCounter.Add(1);
         logger.LogInformation($"AnalyzeImage called with file: {coinImage.FileName}");
 
-        logger.LogInformation("AnalyzeImage Routine Called...");
         var chat = kernel.GetRequiredService<IChatCompletionService>();
         
         var  requestSettings = new OpenAIPromptExecutionSettings(){ };

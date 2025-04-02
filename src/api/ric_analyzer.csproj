@@ -11,6 +11,8 @@
     <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
     <ContainerRepository>ric/api</ContainerRepository>
     <ContainerFamily>jammy-chiseled</ContainerFamily>
+    <VersionSuffix>1.5.$([System.DateTime]::UtcNow.ToString(mmff))</VersionSuffix>
+    <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</Version>
   </PropertyGroup>
 
   <ItemGroup>
