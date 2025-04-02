@@ -42,10 +42,10 @@ public static class ProgramExtensions
         
         var otel = builder.Services.AddOpenTelemetry();
         
-        // otel.UseAzureMonitor( o => {  
-        //         o.ConnectionString = azMonitorConnectionString;
-        //         o.SamplingRatio = 0.1F; 
-        //     });
+        otel.UseAzureMonitor( o => {  
+                o.ConnectionString = azMonitorConnectionString;
+                o.SamplingRatio = 0.1F; 
+            });
 
         otel.ConfigureResource(resource => resource
             .AddService(serviceName: ApplicationName));
