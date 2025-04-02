@@ -1,5 +1,3 @@
-using ric.analyser.api;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(opts =>
@@ -13,7 +11,8 @@ builder.AddSemanticKernelConfiguration();
 builder.AddCustomOtelConfiguration(
     Constants.APP_NAME,
     Constants.OTEL_ENDPOINT,
-    Constants.APP_INSIGHTS_ENDPOINT
+    Constants.APP_INSIGHTS_ENDPOINT,
+    InstrumentationSource.ActivitySourceName
 );
 
 builder.Services.AddCors(options =>
@@ -27,16 +26,20 @@ builder.Services.AddCors(options =>
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHealthChecks();
+builder.Services.AddSingleton<InstrumentationSource>();
 
 var app = builder.Build();
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+var instrumentationSource = app.Services.GetRequiredService<InstrumentationSource>();
+
 app.MapPrometheusScrapingEndpoint().RequireHost("*:9090");
 app.MapHealthChecks("/healthz");
 app.AddDefaultRoute();
-app.AddUploadImageHandler();
+app.AddUploadImageHandler(logger, instrumentationSource);
 app.AddGetResultsHandler();
 app.UseSwagger();
 
-var logger = app.Services.GetRequiredService<ILogger<Program>>();
+
 logger.LogInformation($"{builder.Environment.ApplicationName} - App Run");
 
 app.Run();

@@ -1,15 +1,8 @@
 #pragma warning disable SKEXP0050
 
 namespace ric.analyzer.api;
-public class OpenAI 
+public class RicAIService
 {
-    private readonly ILogger _logger;
-
-    public OpenAI(ILogger<OpenAI> logger)
-    {
-        _logger = logger;
-    }
-
     private static async Task<ReadOnlyMemory<byte>> ConvertFileToMemoryStream(IFormFile file)
     {
         using var memoryStream = new MemoryStream();
@@ -19,15 +12,21 @@ public class OpenAI
         return readOnlyMemory;
     }
 
-    public static async Task<string> AnalyzeImage(Kernel kernel, IFormFile coinImage, ILogger logger)
+    public static async Task<string> AnalyzeImage(Kernel kernel, IFormFile coinImage, ILogger logger, InstrumentationSource instrumentationSource)
     {
+        if (coinImage == null || coinImage.Length == 0)
+        {
+            logger.LogError("No file uploaded.");
+            throw new ArgumentException("No file uploaded.");
+        }
+
+        instrumentationSource.AnalyzeRequestCounter.Add(1);
+        logger.LogInformation($"AnalyzeImage called with file: {coinImage.FileName}");
+
         logger.LogInformation("AnalyzeImage Routine Called...");
         var chat = kernel.GetRequiredService<IChatCompletionService>();
         
-        var  requestSettings = new OpenAIPromptExecutionSettings()
-        {
-            //MaxCompletionTokens = 4096,
-        };
+        var  requestSettings = new OpenAIPromptExecutionSettings(){ };
 
         var history = new ChatHistory();
         history.AddSystemMessage(Constants.SYSTEM_PROMPT);
@@ -43,6 +42,13 @@ public class OpenAI
 
         logger.LogInformation("Calling OpenAI API...");
         var chatResult = await chat.GetChatMessageContentAsync(history, requestSettings, kernel);
+     
+        logger.LogInformation("OpenAI API call completed.");
+        logger.LogInformation($"Chat Result: {chatResult}");
+
+        if( chatResult.InnerContent is OpenAI.Chat.ChatCompletion chatCompletion )
+            logger.LogInformation($"TotalTokenCount: {chatCompletion.Usage?.TotalTokenCount ?? 0}");
+        
         return chatResult.ToString();
     }
 }

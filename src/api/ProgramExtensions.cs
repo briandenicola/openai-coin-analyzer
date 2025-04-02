@@ -1,4 +1,4 @@
-namespace ric.analyser.api;
+namespace ric.analyzer.api;
 
 public static class ProgramExtensions
 {
@@ -12,15 +12,17 @@ public static class ProgramExtensions
         builder.Services.AddSingleton<Kernel>(kernel);
     }
 
-    public static void AddCustomOtelConfiguration(this WebApplicationBuilder builder, string ApplicationName, string otelConnectionString, string azMonitorConnectionString)
+    public static void AddCustomOtelConfiguration(
+        this WebApplicationBuilder builder, 
+        string ApplicationName, 
+        string otelConnectionString, 
+        string azMonitorConnectionString,
+        string ricActivitySourceName)
     {
         AppContext.SetSwitch("Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnosticsSensitive", true);
         var resourceBuilder = ResourceBuilder
             .CreateDefault()
             .AddService("RomanImperialCoinAnalyzer");
-
-        var ricApiMeter = new Meter("Roman Imperial Coin Analyzer", "2.0.0");
-        var ricActivitySource = new ActivitySource("ric.api");
 
         builder.Logging.ClearProviders();
         var loggerFactory = LoggerFactory.Create(builder =>
@@ -40,10 +42,10 @@ public static class ProgramExtensions
         
         var otel = builder.Services.AddOpenTelemetry();
         
-        otel.UseAzureMonitor( o => {  
-                o.ConnectionString = azMonitorConnectionString;
-                o.SamplingRatio = 0.1F; 
-            });
+        // otel.UseAzureMonitor( o => {  
+        //         o.ConnectionString = azMonitorConnectionString;
+        //         o.SamplingRatio = 0.1F; 
+        //     });
 
         otel.ConfigureResource(resource => resource
             .AddService(serviceName: ApplicationName));
@@ -51,7 +53,7 @@ public static class ProgramExtensions
         otel.WithTracing(tracing => tracing
             .AddAspNetCoreInstrumentation()
             .AddHttpClientInstrumentation()
-            .AddSource(ricActivitySource.Name)
+            .AddSource(ricActivitySourceName)
             .AddSource("Microsoft.SemanticKernel*")
             .AddOtlpExporter(opt =>
             {
@@ -63,7 +65,7 @@ public static class ProgramExtensions
             .AddAspNetCoreInstrumentation()
             .AddRuntimeInstrumentation()
             .AddHttpClientInstrumentation()
-            .AddMeter(ricActivitySource.Name)
+            .AddMeter(ricActivitySourceName)
             .AddMeter("Microsoft.AspNetCore.Hosting")
             .AddMeter("Microsoft.AspNetCore.Server.Kestrel")
             .AddMeter("Microsoft.SemanticKernel*")
