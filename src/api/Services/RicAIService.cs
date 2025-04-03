@@ -33,7 +33,7 @@ public class RicAIService
 
     private static async Task<ChatMessageContent> CallOpenAIEndpoint()
     {
-         _logger.LogInformation("OpenAI API call started . . . ");
+        _logger.LogInformation("OpenAI API call started . . . ");
         var chatResult = await _chat.GetChatMessageContentAsync(_history, _requestSettings, _kernel);
         _logger.LogInformation("OpenAI API call completed . . . ");
 
