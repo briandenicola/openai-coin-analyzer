@@ -38,9 +38,7 @@ spec:
         - name: RIC_OTEL_ENDPOINT
           value: {{ print .Values.OTEL.ENDPOINT }}
         - name: RIC_AOI_ENDPOINT
-          value:  {{ print .Values.OPENAI.ENDPOINT }}
-        - name: APP_INSIGHTS_CONNECTION_STRING
-          value: {{ .Values.APP_INSIGHTS.CONNECTION_STRING }}   
+          value:  {{ print .Values.OPENAI.ENDPOINT }}  
         - name: AOI_MODEL_NAME
           value: {{ .Values.OPENAI.MODEL_NAME }}       
         ports:

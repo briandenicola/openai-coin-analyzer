@@ -9,12 +9,14 @@ public class RicAIService
         internal static OpenAIPromptExecutionSettings  _requestSettings ;
         internal static ChatHistory _history;
 
-    public RicAIService(Kernel kernel)
+    public RicAIService(ILogger<RicAIService> logger, Kernel kernel)
     {
         _kernel = kernel;
-        _logger = _kernel.GetRequiredService<ILogger<RicAIService>>();
+        _logger = logger;
+
         _chat = _kernel.GetRequiredService<IChatCompletionService>();
         _requestSettings = new OpenAIPromptExecutionSettings(){ };
+        
         _history = new ChatHistory();
         _history.AddSystemMessage(Constants.SYSTEM_PROMPT);
         _history.AddUserMessage(Constants.AI_PROMPT);

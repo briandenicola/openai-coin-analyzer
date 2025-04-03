@@ -124,8 +124,7 @@ tasks:
         --set APP.TAG_NAME={{.TAG_NAME}}
         --set WORKLOAD_ID.NAME={{.WORKLOAD_ID_NAME}}
         --set WORKLOAD_ID.CLIENT_ID={{.WORKLOAD_CLIENT_ID}}
-        --set WORKLOAD_ID.TENANT_ID={{.WORKLOAD_TENANT_ID}}
-        --set APP_INSIGHTS.CONNECTION_STRING="{{.APP_INSIGHTS}}"        
+        --set WORKLOAD_ID.TENANT_ID={{.WORKLOAD_TENANT_ID}}        
         --set OPENAI.MODEL_NAME={{.MODEL_NAME}}
         --set OPENAI.ENDPOINT={{.OPENAI_ENDPOINT}} ./charts/api > 
         ./cluster-config/api/components.yaml
@@ -145,9 +144,7 @@ tasks:
       ACR_NAME:
         sh: terraform -chdir=./infrastructure output -raw ACR_NAME
       OPENAI_ENDPOINT:
-        sh: terraform -chdir=./infrastructure output -raw OPENAI_ENDPOINT
-      APP_INSIGHTS:
-        sh: terraform -chdir=./infrastructure output -raw APP_INSIGHTS        
+        sh: terraform -chdir=./infrastructure output -raw OPENAI_ENDPOINT     
       COMMIT_VERSION:
         sh: git rev-parse HEAD | cut -c 1-8 
       DATE_TIME:

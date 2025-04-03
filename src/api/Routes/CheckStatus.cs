@@ -6,8 +6,7 @@ public static partial class AppExtensions
     {
         app.MapGet("/status/{requestId}", (string requestId) =>
         {   
-            var logger = app.Services.GetRequiredService<ILogger<Program>>();
-            logger.LogInformation($"status Route Called with {requestId}");
+            app.Logger.LogInformation($"[{requestId}] - Status Route Called . . .");
             return Results.BadRequest(new { Status = "Not Implemented" });  
         });
     }
