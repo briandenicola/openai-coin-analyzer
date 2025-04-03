@@ -11,6 +11,7 @@ public class RicAIService
 
     public RicAIService(ILogger logger, Kernel kernel)
     {
+        _logger = logger;
         _kernel = kernel;
         _chat = _kernel.GetRequiredService<IChatCompletionService>();
         _requestSettings = new OpenAIPromptExecutionSettings(){ };
