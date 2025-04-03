@@ -31,6 +31,22 @@ public class RicAIService
         return readOnlyMemory;
     }
 
+    private static async Task<ChatMessageContent> CallOpenAIEndpoint()
+    {
+         _logger.LogInformation("OpenAI API call started . . . ");
+        var chatResult = await _chat.GetChatMessageContentAsync(_history, _requestSettings, _kernel);
+        _logger.LogInformation("OpenAI API call completed . . . ");
+
+        if( chatResult.InnerContent is OpenAI.Chat.ChatCompletion chatCompletion )
+            _logger.LogInformation($"TotalTokenCount: {chatCompletion.Usage?.TotalTokenCount ?? 0} . . .");
+        
+        _logger.LogInformation($"Analyze Result: {chatResult}");
+        _logger.LogInformation($"Adding ChatResult to History . . . ");
+        _history.AddSystemMessage(chatResult.ToString());
+
+        return chatResult;
+    }
+
     public async Task<string> AnalyzeImage(IFormFile coinImage )
     {
         if (coinImage == null || coinImage.Length == 0)
@@ -46,20 +62,10 @@ public class RicAIService
             new TextContent(Constants.AI_PROMPT),
             new ImageContent(await ConvertFileToMemoryStream(coinImage), coinImage.ContentType)
         };
-
+        
         _history.AddUserMessage(collectionItems);
         _history.AddAssistantMessage("Please wait while I analyze the image...");
-
-        _logger.LogInformation("Calling OpenAI API...");
-        var chatResult = await _chat.GetChatMessageContentAsync(_history, _requestSettings, _kernel);
-     
-        _logger.LogInformation("OpenAI API call completed.");
-        _logger.LogInformation($"Chat Result: {chatResult}");
-
-        if( chatResult.InnerContent is OpenAI.Chat.ChatCompletion chatCompletion )
-            _logger.LogInformation($"TotalTokenCount: {chatCompletion.Usage?.TotalTokenCount ?? 0}");
         
-        _history.AddSystemMessage(chatResult.ToString());
-        return chatResult.ToString();
+        return (await CallOpenAIEndpoint()).ToString();
     }
 }
