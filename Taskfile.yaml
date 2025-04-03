@@ -227,3 +227,7 @@ tasks:
       - az group list --tag Application="{{.TITLE}}" --query "[].name" -o tsv | xargs -ot -n 1 az group delete -y --no-wait -n || true
       - cd infrastructure ;
         rm -rf terraform.tfstate.d .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup .terraform.tfstate.lock.info || true
+      - git branch -D {{.APP_NAME}} || true
+    vars:
+      APP_NAME:
+        sh: terraform -chdir=./infrastructure output -raw APP_NAME
