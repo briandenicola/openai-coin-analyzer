@@ -18,8 +18,8 @@ public class RicAIService
         _history = new ChatHistory();
         _history.AddSystemMessage(Constants.SYSTEM_PROMPT);
         _history.AddUserMessage(Constants.AI_PROMPT);
-
     }
+    
     private static async Task<ReadOnlyMemory<byte>> ConvertFileToMemoryStream(IFormFile file)
     {
         using var memoryStream = new MemoryStream();
