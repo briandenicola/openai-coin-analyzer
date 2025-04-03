@@ -26,6 +26,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHealthChecks();
 builder.Services.AddSingleton<InstrumentationSource>();
+builder.Services.AddScoped<RicAIService>();
 
 var app = builder.Build();
 var logger = app.Services.GetRequiredService<ILogger<Program>>();

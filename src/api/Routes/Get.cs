@@ -12,9 +12,8 @@ public static partial class AppExtensions
    
     public static void AddGetResultsHandler(this WebApplication app)
     {
-        app.MapGet("/result/{requestId}", (string requestId) =>
+        app.MapGet("/result/{requestId}", (string requestId, ILogger logger) =>
         {
-            var logger = app.Services.GetRequiredService<ILogger<Program>>();
             logger.LogInformation($"result Route Called with {requestId}");
             return Results.BadRequest(new { Status = "Not Implemented" });
         });  
