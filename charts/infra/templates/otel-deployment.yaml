@@ -25,7 +25,43 @@ spec:
         component: otel-collector
         azure.workload.identity/use: "true"
     spec:
+      serviceAccountName: {{ .Values.OTEL.WORKLOAD_ID_NAME }}
       containers:
+      - name: azuremonitor-ingestion-proxy
+        image: {{ print "mcr.microsoft.com/azuremonitor/auth-proxy/prod/aad-auth-proxy/images/aad-auth-proxy:" .Values.OTEL.AAD_AGENT_PROXY_VERSION | quote }}  
+        ports:
+        - name: auth-port
+          containerPort: 8082
+        env:
+          - name:  AUDIENCE
+            value: https://monitor.azure.com/.default
+          - name:  TARGET_HOST
+            value: {{ .Values.APP_INSIGHTS.INGESTION_ENDPOINT }}
+          - name:  LISTENING_PORT
+            value: "8082"
+          - name:  AZURE_CLIENT_ID
+            value: {{ .Values.OTEL.CLIENT_ID }}
+          - name:  AZURE_TENANT_ID
+            value: {{ .Values.OTEL.TENANT_ID }}
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: auth-port
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: auth-port
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+        resources:
+          limits:
+            cpu: "1"
+            memory: 2Gi
+          requests:
+            cpu: 200m
+            memory: 400Mi        
       - name: otel-collector
         image: otel/opentelemetry-collector-contrib:{{ .Values.OTEL.VERSION }}
         command:

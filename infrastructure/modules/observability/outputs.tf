@@ -38,6 +38,11 @@ output "APP_INSIGHTS_CONNECTION_STRING" {
   sensitive = true
 }
 
+output "APP_INSIGHTS_INSTRUMENTATION_KEY" {
+  value     = azurerm_application_insights.this.instrumentation_key
+  sensitive = true
+}
+
 output "OTEL_IDENTITY_NAME" {
   value     = azurerm_user_assigned_identity.otel_identity.name
   sensitive = false

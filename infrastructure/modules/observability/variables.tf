@@ -35,6 +35,5 @@ variable "enable_managed_offerings" {
 
 variable "use_aad_authentication" {
   description = "Use AAD authentication for Azure Monitor"
-  default     = false
+  default     = true
 }
-

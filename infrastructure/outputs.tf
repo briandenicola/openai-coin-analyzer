@@ -43,8 +43,13 @@ output "WORKLOAD_TENANT_ID" {
     sensitive = false
 }
 
-output "APP_INSIGHTS" {
+output "APP_INSIGHTS_CONNECTION_STRING" {
     value = module.azure_monitor.APP_INSIGHTS_CONNECTION_STRING
+    sensitive = true
+}
+
+output "APP_INSIGHTS_INSTRUMENTATION_KEY" {
+    value = module.azure_monitor.APP_INSIGHTS_INSTRUMENTATION_KEY
     sensitive = true
 }
 
