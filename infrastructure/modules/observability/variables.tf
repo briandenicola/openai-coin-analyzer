@@ -16,6 +16,10 @@ variable "resource_name" {
   description = "The root value to use for naming resources"
 }
 
+variable "otel_namespace" {
+  description = "The namespace to use for OpenTelemetry"
+}
+
 variable "sdlc_environment" {
   description = "The value for the sdlc environment"
 }
@@ -28,3 +32,5 @@ variable "enable_managed_offerings" {
   description = "Deploy Managed Prometheus and Managed Grafana"
   default     = true
 }
+
+

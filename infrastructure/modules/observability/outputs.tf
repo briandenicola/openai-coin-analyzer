@@ -37,3 +37,8 @@ output "APP_INSIGHTS_CONNECTION_STRING" {
   value     = azurerm_application_insights.this.connection_string
   sensitive = true
 }
+
+output "OTEL_IDENTITY_NAME" {
+  value     = azurerm_user_assigned_identity.otel_identity.name
+  sensitive = false
+}

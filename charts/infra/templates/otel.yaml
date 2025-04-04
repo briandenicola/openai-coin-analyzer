@@ -26,6 +26,7 @@ spec:
         app: opentelemetry
         component: otel-collector
     spec:
+      serviceAccountName: {{ .Values.OTEL.WORKLOAD_ID_NAME }}   
       containers:
       - name: otel-collector
         image: otel/opentelemetry-collector-contrib:{{ .Values.OTEL.VERSION }}

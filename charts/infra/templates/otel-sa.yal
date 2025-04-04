@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.OTEL.WORKLOAD_ID_NAME }}
+  namespace: {{ .Values.OTEL.NAMESPACE }}
+  annotations:
+    azure.workload.identity/client-id: {{ .Values.OTEL.CLIENT_ID }}
+    azure.workload.identity/tenant-id: {{ .Values.OTEL.TENANT_ID }}
+  labels:
+    azure.workload.identity/use: "true"

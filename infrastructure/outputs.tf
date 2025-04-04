@@ -77,3 +77,12 @@ output "KEYVAULT_NAME" {
     value = module.cluster.KEYVAULT_NAME
     sensitive = false
 }
+
+output "OTEL_WORKLOAD_ID_NAME" {
+    value = data.azurerm_user_assigned_identity.otel_identity.name
+    sensitive = false
+}
+output "OTEL_CLIENT_ID" {
+    value = data.azurerm_user_assigned_identity.otel_identity.client_id
+    sensitive = false
+}

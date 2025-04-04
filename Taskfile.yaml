@@ -158,7 +158,10 @@ tasks:
         --set APP.TAG_NAME={{.TAG_NAME}}
         --set ISTIO.CLIENT_ID={{.ISTIO_CLIENT_ID}}
         --set ISTIO.TENANT_ID={{.ISTIO_TENANT_ID}}
-        --set ISTIO.KEYVAULT_NAME={{.KEYVAULT_NAME}}
+        --set ISTIO.KEYVAULT_NAME={{.KEYVAULT_NAME}}        
+        --set OTEL.CLIENT_ID={{.OTEL_CLIENT_ID}}
+        --set OTEL.TENANT_ID={{.OTEL_TENANT_ID}}
+        --set OTEL.WORKLOAD_ID_NAME={{.OTEL_WORKLOAD_ID_NAME}}                
         --set APP_INSIGHTS.CONNECTION_STRING="{{.APP_INSIGHTS}}"
         ./charts/infra > ./cluster-config/infrastructure/components.yaml
       - git add ./cluster-config/infrastructure/components.yaml || true
@@ -173,7 +176,13 @@ tasks:
       ISTIO_CLIENT_ID:
         sh: terraform -chdir=./infrastructure output -raw ISTIO_CLIENT_ID
       ISTIO_TENANT_ID:
-        sh: terraform -chdir=./infrastructure output -raw ISTIO_TENANT_ID  
+        sh: terraform -chdir=./infrastructure output -raw ISTIO_TENANT_ID 
+      OTEL_WORKLOAD_ID_NAME:
+        sh: terraform -chdir=./infrastructure output -raw ISTIO_CLIENT_ID
+      OTEL_CLIENT_ID:
+        sh: terraform -chdir=./infrastructure output -raw OTEL_WORKLOAD_ID_NAME
+      OTEL_TENANT_ID:
+        sh: terraform -chdir=./infrastructure output -raw ISTIO_TENANT_ID                    
       KEYVAULT_NAME:
         sh: terraform -chdir=./infrastructure output -raw KEYVAULT_NAME  
       DATE_TIME:
