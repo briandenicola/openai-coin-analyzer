@@ -28,7 +28,7 @@ resource "azurerm_role_assignment" "metric_publisher" {
   skip_service_principal_aad_check = true
 }
 
-resource "azurerm_role_assignment" "ai_metric_publisher" {
+resource "azurerm_role_assignment" "app_insight_metric_publisher" {
   scope                            = azurerm_application_insights.this.id
   role_definition_name             = "Monitoring Metrics Publisher"
   principal_id                     = azurerm_user_assigned_identity.otel_identity.principal_id
