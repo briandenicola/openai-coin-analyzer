@@ -178,9 +178,9 @@ tasks:
       ISTIO_TENANT_ID:
         sh: terraform -chdir=./infrastructure output -raw ISTIO_TENANT_ID 
       OTEL_WORKLOAD_ID_NAME:
-        sh: terraform -chdir=./infrastructure output -raw ISTIO_CLIENT_ID
-      OTEL_CLIENT_ID:
         sh: terraform -chdir=./infrastructure output -raw OTEL_WORKLOAD_ID_NAME
+      OTEL_CLIENT_ID:
+        sh: terraform -chdir=./infrastructure output -raw OTEL_CLIENT_ID
       OTEL_TENANT_ID:
         sh: terraform -chdir=./infrastructure output -raw ISTIO_TENANT_ID                    
       KEYVAULT_NAME:
