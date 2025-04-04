@@ -162,7 +162,7 @@ tasks:
         --set OTEL.CLIENT_ID={{.OTEL_CLIENT_ID}}
         --set OTEL.TENANT_ID={{.OTEL_TENANT_ID}}
         --set OTEL.WORKLOAD_ID_NAME={{.OTEL_WORKLOAD_ID_NAME}}                
-        --set APP_INSIGHTS.CONNECTION_STRING="{{.APP_INSIGHTS_APP_INSIGHTS_CONNECTION_STRING}}"
+        --set APP_INSIGHTS.CONNECTION_STRING="{{.APP_INSIGHTS_CONNECTION_STRING}}"
         --set APP_INSIGHTS.APP_INSIGHTS_INSTRUMENTATION_KEY={{.APP_INSIGHTS_INSTRUMENTATION_KEY}}
         --set APP_INSIGHTS.INGESTION_ENDPOINT={{.INGESTION_ENDPOINT}}
         ./charts/infra > ./cluster-config/infrastructure/components.yaml
@@ -192,7 +192,7 @@ tasks:
       DATE_TIME:
         sh: date 
       INGESTION_ENDPOINT:
-        sh: terraform -chdir=./infrastructure output -raw APP_INSIGHTS_CONNECTION_STRING | grep -oP 'IngestionEndpoint=\K[^;]+'
+        sh: terraform -chdir=./infrastructure output -raw APP_INSIGHTS_CONNECTION_STRING | grep -oP 'IngestionEndpoint=\K[^;]+' | sed 's:/$::'
 
   dns:
     desc: Gets the IP Address of the Istio Gateway
