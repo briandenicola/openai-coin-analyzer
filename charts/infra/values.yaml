@@ -1,7 +1,7 @@
 OTEL:
   ZIPKIN_ENDPOINT                       : "http://otel-collector.otel-system.svc.cluster.local:9411/api/v2/spans"
   ENDPOINT                              : "http://otel-collector.otel-system.svc.cluster.local:4317"
-  VERSION                               : "0.98.0"
+  VERSION                               : "0.123.0"
   NAMESPACE                             : "otel-system"
   WORKLOAD_ID_NAME                      : ""
   CLIENT_ID                             : ""

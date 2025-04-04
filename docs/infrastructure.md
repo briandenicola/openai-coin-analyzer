@@ -15,7 +15,7 @@ Infrastructure
 - :one: `task init`         - Initializes the Terraform environment for the Roman Imperial Coin Analyzer
 - :two: `task apply`        - Applies the Terraform configuration for the Roman Imperial Coin Analyzer
 - :three: `task creds`      - Gets the AKS credentials for the newly created AKS cluster
-- :four: `task: certs`      - Configures the Istio Gateway with a TLS certificate from Azure Key Vault
+- :four: `task: core`      - Configures the Istio Gateway with a TLS certificate from Azure Key Vault
 - :five: `task dns`         - Gets the IP Address of the Istio Gateway
 - :six: **MANUAL STEP**     - Create DNS records with your DNS provider
 - :seven: **MANUAL STEP**   - Import the [API swagger file into APIM API](./swagger.md)
@@ -89,22 +89,22 @@ task: [creds] sed -i s/devicecode/azurecli/g ~/.kube/config
 ```
 
 ```bash
-➜  openai-coin-analyzer git:(main) ✗ task certs
+➜  openai-coin-analyzer git:(main) ✗ task core
 task: [branch] git branch weasel-3444 2>>/dev/null || true
 task: [branch] git checkout weasel-3444
 Switched to branch 'weasel-3444'
-task: [certs] helm template ric-analyzer --set APP.TAG_NAME=weasel-3444 --set ISTIO.CLIENT_ID=ff964488-5541-4265-a395-b587349d9212 --set ISTIO.TENANT_ID=16b3c013-d300-468d-ac64-7eda0820b6d3 --set ISTIO.KEYVAULT_NAME=zebra2141kv --set APP_INSIGHTS.CONNECTION_STRING="InstrumentationKey=REDACTED;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=REDACTED" ./charts/infra > ./cluster-config/infrastructure/components.yaml
-task: [certs] git add ./cluster-config/infrastructure/components.yaml || true
-task: [certs] git commit -m "[Fri Mar  7 10:28:49 CST 2025] - Updates for weasel-3444 infra 🖥️ certificates" || true
+task: [core] helm template ric-analyzer --set APP.TAG_NAME=weasel-3444 --set ISTIO.CLIENT_ID=ff964488-5541-4265-a395-b587349d9212 --set ISTIO.TENANT_ID=16b3c013-d300-468d-ac64-7eda0820b6d3 --set ISTIO.KEYVAULT_NAME=zebra2141kv --set APP_INSIGHTS.CONNECTION_STRING="InstrumentationKey=REDACTED;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=REDACTED" ./charts/infra > ./cluster-config/infrastructure/components.yaml
+task: [core] git add ./cluster-config/infrastructure/components.yaml || true
+task: [core] git commit -m "[Fri Mar  7 10:28:49 CST 2025] - Updates for weasel-3444 infra 🖥️ certificates" || true
 [weasel-3444 7d301d2] [Fri Mar  7 10:28:49 CST 2025] - Updates for weasel-3444 infra 🖥️ certificates
  1 file changed, 181 insertions(+)
-task: [certs] git push --set-upstream origin weasel-3444 || true
+task: [core] git push --set-upstream origin weasel-3444 || true
 Enumerating objects: 9, done.
 Counting objects: 100% (9/9), done.
 Delta compression using up to 8 threads
 Compressing objects: 100% (5/5), done.
 ...
-task: [certs] git checkout main
+task: [core] git checkout main
 ➜  openai-coin-analyzer git:(main) ✗ 
 ```
 

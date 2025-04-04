@@ -38,7 +38,7 @@ tasks:
       - task: init
       - task: apply
       - task: creds
-      - task: certs
+      - task: core
       - task: build
       - task: deploy
       - task: dns
@@ -150,7 +150,7 @@ tasks:
       DATE_TIME:
         sh: date        
 
-  certs:
+  core:
     desc: Deploys Istio Certificate and Otel infrastructure via Helm/GitOps
     cmds:
       - task: branch

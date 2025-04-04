@@ -62,7 +62,7 @@
     | Task |  Description | 
     | ------ | ------ |
     `task build` |              Builds application via ACR tasks
-    `task certs` |              Deploys Istio Certificate and Otel infrastructure via Helm/GitOps
+    `task core` |              Deploys Istio Certificate and Otel infrastructure via Helm/GitOps
     `task creds` |              Gets credential file for newly created AKS cluster
     `task deploy` |             Deploys application via Helm/GitOps
     `task dns` |                Gets the IP Address of the Istio Gateway
