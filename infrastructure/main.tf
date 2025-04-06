@@ -3,6 +3,7 @@ locals {
   aks_name               = "${local.resource_name}-aks"
   apim_name              = "${local.resource_name}-apim"
   vnet_name              = "${local.resource_name}-vnet"
+  workload_identity      = "${local.resource_name}-app-identity"
   sa_name                = "${replace(local.resource_name, "-", "")}files"
   acr_name               = "${replace(local.resource_name, "-", "")}acr"
   keyvault_name          = "${replace(local.resource_name, "-", "")}kv"

@@ -28,17 +28,17 @@ spec:
       serviceAccountName: {{ .Values.OTEL.WORKLOAD_ID_NAME }}
       containers:
       - name: azuremonitor-ingestion-proxy
-        image: {{ print "mcr.microsoft.com/azuremonitor/auth-proxy/prod/aad-auth-proxy/images/aad-auth-proxy:" .Values.OTEL.AAD_AGENT_PROXY_VERSION | quote }}  
+        image: {{ print .Values.OTEL.AAD_AGENT_PROXY_CONTAINER_NAME "":" .Values.OTEL.AAD_AGENT_PROXY_VERSION | quote }}  
         ports:
         - name: auth-port
-          containerPort: 8082
+          containerPort: {{ .Values.OTEL.PROXY_LISTENING_PORT }}
         env:
           - name:  AUDIENCE
             value: https://monitor.azure.com/.default
           - name:  TARGET_HOST
             value: {{ .Values.APP_INSIGHTS.INGESTION_ENDPOINT }}
           - name:  LISTENING_PORT
-            value: "8082"
+            value: {{ .Values.OTEL.PROXY_LISTENING_PORT | quote }}
           - name:  AZURE_CLIENT_ID
             value: {{ .Values.OTEL.CLIENT_ID }}
           - name:  AZURE_TENANT_ID

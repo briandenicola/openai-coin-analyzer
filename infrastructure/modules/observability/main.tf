@@ -6,6 +6,8 @@ locals {
   monitor_rg_name      = "${var.resource_name}-monitor_rg"
   grafana_name         = "${var.resource_name}-grafana"
   prometheus_name      = "${var.resource_name}-prometheus"
+  workload_identity    = "${var.resource_name}-otel-identity"
+
   streams = [
     "Microsoft-ContainerLog",
     "Microsoft-ContainerLogV2",

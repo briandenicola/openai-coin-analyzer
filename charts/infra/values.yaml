@@ -2,6 +2,7 @@ OTEL:
   ZIPKIN_ENDPOINT                       : "http://otel-collector.otel-system.svc.cluster.local:9411/api/v2/spans"
   ENDPOINT                              : "http://otel-collector.otel-system.svc.cluster.local:4317"
   VERSION                               : "0.100.0"
+  AAD_AGENT_PROXY_CONTAINER_NAME        : "mcr.microsoft.com/azuremonitor/auth-proxy/prod/aad-auth-proxy/images/aad-auth-proxy"
   AAD_AGENT_PROXY_VERSION               : "0.1.0-main-04-10-2024-7067ac84"
   NAMESPACE                             : "otel-system"
   WORKLOAD_ID_NAME                      : ""
@@ -18,3 +19,5 @@ ISTIO:
   TENANT_ID                             : ""                         
   KEYVAULT_NAME                         : ""
   REVISION                              : "asm-1-23"
+  NAMESPACE                             : "aks-istio-ingress"
+  WORKLOAD_ID_NAME                      : "istio-ingress-sa-identity"

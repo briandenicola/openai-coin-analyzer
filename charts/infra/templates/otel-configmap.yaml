@@ -30,7 +30,7 @@ data:
         verbosity: detailed
 
       azuremonitor:
-        connection_string: {{ print "InstrumentationKey=" .Values.APP_INSIGHTS.INSTRUMENTATION_KEY ";IngestionEndpoint=http://localhost:8082" | quote  }}
+        connection_string: {{ print "InstrumentationKey=" .Values.APP_INSIGHTS.INSTRUMENTATION_KEY ";IngestionEndpoint=http://localhost:" .Values.OTEL.PROXY_LISTENING_PORT | quote  }}
         maxbatchsize: 10
         maxbatchinterval: 5s
 
