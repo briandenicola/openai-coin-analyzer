@@ -1,13 +1,17 @@
 #pragma warning disable SKEXP0050
+#pragma warning disable SKEXP0001
+
+using  Microsoft.SemanticKernel.ChatCompletion;
 
 namespace ric.analyzer.api;
 public class RicAIService
 {
-        internal static ILogger _logger;
-        internal static Kernel _kernel;
-        internal static IChatCompletionService _chat;
-        internal static OpenAIPromptExecutionSettings  _requestSettings ;
-        internal static ChatHistory _history;
+    internal static ILogger _logger;
+    internal static Kernel _kernel;
+    internal static IChatCompletionService _chat;
+    internal static OpenAIPromptExecutionSettings  _requestSettings ;
+    internal static ChatHistory _history;
+    internal static ChatHistoryTruncationReducer _reducer;
 
     public RicAIService(ILogger<RicAIService> logger, Kernel kernel)
     {
@@ -16,6 +20,7 @@ public class RicAIService
 
         _chat = _kernel.GetRequiredService<IChatCompletionService>();
         _requestSettings = new OpenAIPromptExecutionSettings(){ };
+        _reducer = new ChatHistoryTruncationReducer(targetCount: 2);
         
         _history = new ChatHistory();
         _history.AddSystemMessage(Constants.SYSTEM_PROMPT);
@@ -47,6 +52,19 @@ public class RicAIService
         return chatResult;
     }
 
+    public async Task TrimHistory()
+    {
+        _logger.LogInformation("Trimming history . . . ");
+        var reducedMessages = await _reducer.ReduceAsync(_history);
+
+        if (reducedMessages is not null)
+            _history = [.. reducedMessages];
+        
+        var response = CallOpenAIEndpoint();
+        _history.AddSystemMessage(response.ToString());
+
+    }
+
     public async Task<string> AnalyzeImage(IFormFile coinImage )
     {
         if (coinImage == null || coinImage.Length == 0)
@@ -67,5 +85,22 @@ public class RicAIService
         _history.AddAssistantMessage("Please wait while I analyze the image...");
         
         return (await CallOpenAIEndpoint()).ToString();
+    }
+
+    public async Task<string> Chat(string userPrompt)
+    {
+        if (string.IsNullOrWhiteSpace(userPrompt))
+        {
+            _logger.LogError("User prompt is empty or null.");
+            throw new ArgumentException("User prompt cannot be empty or null.");
+        }
+
+        _logger.LogInformation($"Chat called with prompt: {userPrompt}");
+        _history.AddUserMessage(userPrompt);
+
+        var response = await CallOpenAIEndpoint();
+        _history.AddSystemMessage(response.ToString());
+
+        return response.ToString();
     }
 }
