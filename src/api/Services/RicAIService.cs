@@ -1,7 +1,4 @@
-#pragma warning disable SKEXP0050
 #pragma warning disable SKEXP0001
-
-using  Microsoft.SemanticKernel.ChatCompletion;
 
 namespace ric.analyzer.api;
 public class RicAIService
