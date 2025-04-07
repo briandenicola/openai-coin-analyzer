@@ -229,7 +229,7 @@ tasks:
     - flux get all
 
   restart:
-    desc: Performs a rollout restart on all deployments in eshop namespace
+    desc: Performs a rollout restart on all deployments in ric namespace
     cmds:
     - kubectl -n ric rollout restart deploy
 

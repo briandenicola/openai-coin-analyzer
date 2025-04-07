@@ -69,7 +69,7 @@
     `task down` |               Destroys all Azure resources and cleans up Terraform
     `task hubble` |             Install Hubble Dashboard for Network Observability
     `task init` |               Initializes Terraform for Roman Imperial Coin Analyzer
-    `task restart` |            Performs a rollout restart on all deployments in eshop namespace
+    `task restart` |            Performs a rollout restart on all deployments in the ric namespace
     `task status` |             Gets the overall status of the cluster
     `task ui` |                 Builds and Deploys the UI code to Azure Static Web Apps
     `task up` |                 Creates complete Azure environment for Roman Imperial Coin Analyzer
