@@ -12,6 +12,7 @@ vars:
   APP_URL: https://ric.{{.DEFAULT_DOMAIN}}
   COUNT: 2
   MODEL_NAME: o1
+  NAMESPACE: ric 
 
 includes:
   local:
@@ -208,20 +209,21 @@ tasks:
     desc: Install Hubble Dashboard for Network Observability 
     dir: ./scripts
     cmds:
-    - bash ./hubble-certs.sh
-    - kubectl apply -f ../cluster-config/hubble/
-    - kubectl -n kube-system get pods -o wide -l k8s-app=hubble-relay
-    - kubectl -n kube-system get pods -o wide -l k8s-app=hubble-ui
-    - echo -e '➡️\033[1m\e[38;5;45mHubble is now setup. . .'
+    #- bash ./hubble-certs.sh
+    #- kubectl apply -f ../cluster-config/hubble/
+    #- kubectl -n kube-system get pods -o wide -l k8s-app=hubble-relay
+    #- kubectl -n kube-system get pods -o wide -l k8s-app=hubble-ui
+    - cmd: echo -e '➡️\033[1m\e[38;5;45mHubble is now setup. . .'
+      silent: true
     - cmd: echo; 
         echo -e '➡️\033[1m\e[38;5;45mNext, to access the Dashboard, run the following commands:' &&
-        echo -e '\t\033[1m\e[38;5;196mkubectl -n kube-system port-forward svc/hubble-ui 12000:80' &&
+        echo -e '\t\033[1m\e[38;5;46mkubectl -n kube-system port-forward svc/hubble-ui 12000:80' &&
         echo -e '➡️\033[1m\e[38;5;45mThen click this 🔗 \033[1m\e[38;5;46mhttp://localhost:12000'
       silent: true        
     - cmd: echo; 
         echo -e '➡️\033[1m\e[38;5;45mOr, the Hubble cli can also be used to observe pod traffic with:' &&         
-        echo -e '\t\033[1m\e[38;5;196mkubectl port-forward -n kube-system svc/hubble-relay --address 127.0.0.1 4245:443 &&' &&
-        echo -e '\t\033[1m\e[38;5;196mhubble observe --to-pod $(kubectl -n ric get pods -o wide -l app:={{.APP_NAME}} -o jsonpath="{.items[0].metadata.name}")'
+        echo -e '\t➡️\033[1m\e[38;5;46mkubectl port-forward -n kube-system svc/hubble-relay --address 127.0.0.1 4245:443' &&
+        echo -e '\t➡️\033[1m\e[38;5;46mhubble observe --to-pod {{.NAMESPACE}}/$(kubectl -n {{.NAMESPACE}} get pods -o wide -l name={{.APP_NAME}} -o jsonpath="{.items[0].metadata.name}") -f'
       silent: true
     vars:
       APP_NAME:
@@ -238,9 +240,9 @@ tasks:
     - flux get all
 
   restart:
-    desc: Performs a rollout restart on all deployments in ric namespace
+    desc: Performs a rollout restart on all deployments in {{.NAMESPACE}} namespace
     cmds:
-    - kubectl -n ric rollout restart deploy
+    - kubectl -n {{.NAMESPACE}} rollout restart deploy
 
   down:
     desc: Destroys all Azure resources and cleans up Terraform
