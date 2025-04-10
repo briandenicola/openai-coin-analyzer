@@ -5,6 +5,7 @@
 
 # Environment Variables
 .env
+scripts/.certs
 src/ui/.env
 
 # Terraform 
