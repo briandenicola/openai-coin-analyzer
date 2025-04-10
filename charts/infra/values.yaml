@@ -18,6 +18,6 @@ ISTIO:
   CLIENT_ID                             : ""
   TENANT_ID                             : ""                         
   KEYVAULT_NAME                         : ""
-  REVISION                              : "asm-1-23"
+  REVISION                              : "asm-1-24"
   NAMESPACE                             : "aks-istio-ingress"
   WORKLOAD_ID_NAME                      : "istio-ingress-sa-identity"
