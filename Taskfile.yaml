@@ -209,10 +209,10 @@ tasks:
     desc: Install Hubble Dashboard for Network Observability 
     dir: ./scripts
     cmds:
-    #- bash ./hubble-certs.sh
-    #- kubectl apply -f ../cluster-config/hubble/
-    #- kubectl -n kube-system get pods -o wide -l k8s-app=hubble-relay
-    #- kubectl -n kube-system get pods -o wide -l k8s-app=hubble-ui
+    - bash ./hubble-certs.sh
+    - kubectl apply -f ../cluster-config/hubble/
+    - kubectl -n kube-system get pods -o wide -l k8s-app=hubble-relay
+    - kubectl -n kube-system get pods -o wide -l k8s-app=hubble-ui
     - cmd: echo -e '➡️\033[1m\e[38;5;45mHubble is now setup. . .'
       silent: true
     - cmd: echo; 
