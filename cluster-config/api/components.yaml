@@ -1,0 +1,121 @@
+---
+# Source: roman-coin-analyzer/templates/namespaces.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ric
+labels:
+  istio.io/rev: asm-1-24
+---
+# Source: roman-coin-analyzer/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: bass-58268-app-identity
+  namespace: ric
+  annotations:
+    azure.workload.identity/client-id: 2accc93d-0aff-4151-8287-588747f1db85
+    azure.workload.identity/tenant-id: 16b3c013-d300-468d-ac64-7eda0820b6d3
+  labels:
+    azure.workload.identity/use: "true"
+---
+# Source: roman-coin-analyzer/templates/deployment.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: analyzer-api-svc
+  namespace: ric
+spec:
+  selector:
+    app: analyzer-api
+    name: bass-58268
+  ports:
+  - port: 80
+    targetPort: 8080
+    name: web
+  - port: 9090
+    targetPort: 9090
+    name: metrics    
+  type: ClusterIP
+---
+# Source: roman-coin-analyzer/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: analyzer-api
+  namespace: ric
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: analyzer-api
+      name: bass-58268
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: analyzer-api
+        name: bass-58268
+        azure.workload.identity/use: "true"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"        
+    spec:
+      serviceAccountName: bass-58268-app-identity
+      containers:
+      - name: analyzer-api
+        image:  bass58268acr.azurecr.io/ric/analyzer-api:950dc997 
+        imagePullPolicy: Always
+        securityContext:
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false 
+        env:
+        - name: RIC_OTEL_ENDPOINT
+          value: http://otel-collector.otel-system.svc.cluster.local:4317
+        - name: RIC_AOI_ENDPOINT
+          value:  https://bass-58268-openai.openai.azure.com/  
+        - name: AOI_MODEL_NAME
+          value: o1       
+        ports:
+        - containerPort: 8080
+        - containerPort: 9090
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "2"
+          requests:
+            memory: "128Mi"
+            cpu: "0.5"
+---
+# Source: roman-coin-analyzer/templates/deployment.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name:  analyzer-api-vs
+  namespace: ric
+spec:
+  hosts:
+  -  "*"
+  gateways:
+  -  aks-istio-ingress/default-bjdazure-tech-gw
+  http:
+  - route:
+    - destination:
+        host: analyzer-api-svc
+        port:
+          number: 80
+    corsPolicy:          
+      allowMethods:
+      - POST
+      - PUT
+      - GET
+      - OPTIONS
+      allowOrigins:
+      - regex: 'https?://(?:[\w-]+\.)*(azurestaticapps\.net|azure-api\.net)(?:/[\w\-./?%&=]*)?'
+      unmatchedPreflights: FORWARD
