@@ -28,7 +28,7 @@ spec:
       serviceAccountName: {{ .Values.OTEL.WORKLOAD_ID_NAME }}
       containers:
       - name: azuremonitor-ingestion-proxy
-        image: {{ print .Values.OTEL.AAD_AGENT_PROXY_CONTAINER_NAME "":" .Values.OTEL.AAD_AGENT_PROXY_VERSION | quote }}  
+        image: {{ print .Values.OTEL.AAD_AGENT_PROXY_CONTAINER_NAME ":" .Values.OTEL.AAD_AGENT_PROXY_VERSION | quote }}  
         ports:
         - name: auth-port
           containerPort: {{ .Values.OTEL.PROXY_LISTENING_PORT }}
