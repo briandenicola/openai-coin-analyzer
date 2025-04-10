@@ -61,7 +61,7 @@ data:
         verbosity: detailed
 
       azuremonitor:
-        connection_string: "InstrumentationKey=1e9d66f3-055c-4d8d-8bb4-6f2808ed0809;IngestionEndpoint=http://localhost:<nil>"
+        connection_string: "InstrumentationKey=1e9d66f3-055c-4d8d-8bb4-6f2808ed0809;IngestionEndpoint=http://localhost:8082"
         maxbatchsize: 10
         maxbatchinterval: 5s
 
@@ -130,14 +130,14 @@ spec:
         image: "mcr.microsoft.com/azuremonitor/auth-proxy/prod/aad-auth-proxy/images/aad-auth-proxy:0.1.0-main-04-10-2024-7067ac84"  
         ports:
         - name: auth-port
-          containerPort: 
+          containerPort: 8082
         env:
           - name:  AUDIENCE
             value: https://monitor.azure.com/.default
           - name:  TARGET_HOST
             value: https://eastus2-3.in.applicationinsights.azure.com
           - name:  LISTENING_PORT
-            value: 
+            value: "8082"
           - name:  AZURE_CLIENT_ID
             value: 9cb10301-f6c8-4e86-9e2c-f6f28e359b0e
           - name:  AZURE_TENANT_ID
