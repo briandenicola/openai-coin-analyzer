@@ -224,6 +224,7 @@ tasks:
         echo -e '➡️\033[1m\e[38;5;45mOr, the Hubble cli can also be used to observe pod traffic with:' &&         
         echo -e '\t➡️\033[1m\e[38;5;46mkubectl port-forward -n kube-system svc/hubble-relay --address 127.0.0.1 4245:443' &&
         echo -e '\t➡️\033[1m\e[38;5;46mhubble observe --to-pod {{.NAMESPACE}}/$(kubectl -n {{.NAMESPACE}} get pods -o wide -l name={{.APP_NAME}} -o jsonpath="{.items[0].metadata.name}") -f'
+        echo -e '\t➡️\033[1m\e[38;5;46mhubble observe -n {{.NAMESPACE}} -f'
       silent: true
     vars:
       APP_NAME:
