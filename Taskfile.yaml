@@ -8,7 +8,6 @@ vars:
   HELM_CHART: ric-analyzer
   SKU: Standard_D4ads_v5
   DEFAULT_REGION: canadacentral
-  DEFAULT_DOMAIN: bjdazure.tech
   APP_URL: https://ric.{{.DEFAULT_DOMAIN}}
   COUNT: 2
   MODEL_NAME: o1
