@@ -33,12 +33,19 @@ tasks:
     dir: ./src/api
     cmds: 
     - task: aspire
-    - RIC_AOI_ENDPOINT={{.AOI_ENDPOINT}} dotnet run
+    - task: build
+    - RIC_AOI_ENDPOINT={{.AOI_ENDPOINT}} dotnet run --no-build
     vars:
-      AOI_ENDPOINT:
+      AOI_ENDPOINT: 
         sh: terraform -chdir=../../infrastructure/simple output -raw OPENAI_ENDPOINT
 
+  build:
+    dir: ./src/api
+    cmds:
+    - dotnet build 
+
   aspire:
+    run: once
     cmds: 
     - docker run --rm -p 18888:18888 -p 4317:18889 -d --name aspire-dashboard  mcr.microsoft.com/dotnet/aspire-dashboard:8.1.0 > /dev/null 2>&1 || true
 
