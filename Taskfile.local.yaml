@@ -31,16 +31,18 @@ tasks:
   run:
     desc: Starts Aspire Dashboard and compiles/runs API (local)
     dir: ./src/api
+    deps:
+      - task: aspire
+      - task: build
     cmds: 
-    - task: aspire
-    - task: build
     - RIC_AOI_ENDPOINT={{.AOI_ENDPOINT}} dotnet run --no-build
     vars:
-      AOI_ENDPOINT: 
-        sh: terraform -chdir=../../infrastructure/simple output -raw OPENAI_ENDPOINT
+      AOI_ENDPOINT: 123
+        #sh: terraform -chdir=../../infrastructure/simple output -raw OPENAI_ENDPOINT
 
   build:
     dir: ./src/api
+    run: when_changed
     cmds:
     - dotnet build 
 
