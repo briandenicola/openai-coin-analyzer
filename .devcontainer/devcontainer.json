@@ -11,6 +11,9 @@
 
 	"customizations": {
 		"vscode": {	
+			"settings": {
+				"editor.formatOnSave": true
+			},			
 			"extensions": [
 				"ms-dotnettools.csharp",
 				"ms-dotnettools.vscode-dotnet-runtime",
@@ -22,7 +25,8 @@
 				"ms-vscode.powershell",
 				"github.vscode-pull-request-github",
 				"msjsdiag.vscode-react-native",
-
+				"dbaeumer.vscode-eslint", 
+				"esbenp.prettier-vscode",
 				"github.copilot",
 				"mindaro.mindaro" 
 			]
