@@ -15,7 +15,7 @@ Infrastructure
 - :one: `task init`         - Initializes the Terraform environment for the Roman Imperial Coin Analyzer
 - :two: `task apply`        - Applies the Terraform configuration for the Roman Imperial Coin Analyzer
 - :three: `task creds`      - Gets the AKS credentials for the newly created AKS cluster
-- :four: `task: core`      - Configures the Istio Gateway with a TLS certificate from Azure Key Vault
+- :four: `task core`      - Configures the Istio Gateway with a TLS certificate from Azure Key Vault
 - :five: `task dns`         - Gets the IP Address of the Istio Gateway
 - :six: **MANUAL STEP**     - Create DNS records with your DNS provider
 - :seven: **MANUAL STEP**   - Import the [API swagger file into APIM API](./swagger.md)
