@@ -39,3 +39,12 @@ variable "certificate_name" {
 variable "custom_domain" {
   description = "The custom domain to use for the application"
 }
+
+variable "apim_sku" {
+  description = "The SKU for the API Management service"
+  default     = "Consumption"
+  validation {
+    condition     = contains(["Consumption", "Basic","Standard"], var.apim_sku)
+    error_message = "Valid values for var: apim_sku are (Windows, Linux)."
+  } 
+}

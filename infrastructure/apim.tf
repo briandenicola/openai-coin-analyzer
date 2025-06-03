@@ -4,7 +4,7 @@ resource "azurerm_api_management" "this" {
   resource_group_name = azurerm_resource_group.app.name
   publisher_name      = "BD"
   publisher_email     = "admin@bjdazure.tech"
-  sku_name            = "Consumption_0"
+  sku_name            = var.apim_sku == "Consumption" ? "${var.apim_sku}_0" : "${var.apim_sku}_1"
 }
 
 resource "azurerm_api_management_product" "ric_api_product" {

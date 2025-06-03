@@ -12,6 +12,7 @@ vars:
   COUNT: 2
   MODEL_NAME: o1
   NAMESPACE: ric 
+  APIM_SKU: Standard #Consumption
 
 includes:
   local:
@@ -64,6 +65,7 @@ tasks:
         -var "custom_domain={{.APP_URL}}"
         -var "certificate_base64_encoded={{.CERT}}" 
         -var "certificate_password={{.CERT_PFX_PASS}}"
+        -var "apim_sku={{.APIM_SKU}}"
     vars:
       REGION: "{{default .DEFAULT_REGION .CLI_ARGS}}"
       CERT:
