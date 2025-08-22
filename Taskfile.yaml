@@ -12,7 +12,7 @@ vars:
   COUNT: 2
   MODEL_NAME: o1
   NAMESPACE: ric 
-  APIM_SKU: Standard #Consumption
+  APIM_SKU: Consumption #Standard 
 
 includes:
   local:
