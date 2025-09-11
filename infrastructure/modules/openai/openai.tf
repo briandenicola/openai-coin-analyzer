@@ -30,7 +30,7 @@ resource "azurerm_monitor_diagnostic_setting" "this" {
 
   }
 
-  metric {
+  enabled_metric {
     category = "AllMetrics"
   }
 }

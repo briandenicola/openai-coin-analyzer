@@ -7,9 +7,14 @@ resource "azurerm_storage_account" "this" {
   account_kind               = "StorageV2"
   https_traffic_only_enabled = true
   min_tls_version            = "TLS1_2"
+  shared_access_key_enabled  = false
 }
 
 resource "azurerm_storage_container" "images" {
+  depends_on = [
+    azurerm_role_assignment.storage_account_data_owner,
+    azurerm_role_assignment.storage_account_contributor,
+  ]
   name                  = "images"
   storage_account_id    = azurerm_storage_account.this.id
   container_access_type = "private"
