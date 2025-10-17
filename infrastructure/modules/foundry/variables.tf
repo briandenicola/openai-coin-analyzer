@@ -7,6 +7,7 @@ variable "resource_group" {
   type = object({
     name     = string
     location = string
+    id       = string
   })
 }
 
@@ -15,5 +16,9 @@ variable "log_analytics" {
   type = object({
     deploy       = bool
     workspace_id = string
+    application_insights = object({
+      id                = string
+      connection_string = string
+    })
   })
 }

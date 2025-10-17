@@ -23,8 +23,8 @@ output "ACR_NAME" {
   sensitive = false
 }
 
-output "OPENAI_ENDPOINT" {
-    value = module.openai.OPENAI_ENDPOINT
+output "AZURE_AI_PROJECT_ENDPOINT" {
+    value = module.foundry.AZURE_AI_PROJECT_ENDPOINT
     sensitive = false
 }
 
