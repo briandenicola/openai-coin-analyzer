@@ -14,7 +14,7 @@ Component | Usage
 ------ | ------
 Azure Kubernetes Service | Container Orchestration Runtime Platform  
 Azure Blob Storage | Image Storage 
-Azure OpenAI Service | Service that analyze the coin
+Azure AI Foundry Service | Hosts the LLM to analyze the coin
 Azure Static Web Apps | Hosting platform for React Native UI
 Azure Key Vault | Secret store 
 Azure Container Registry | Container Registry for Docker Images
@@ -50,9 +50,13 @@ Azure APIM Managment | API Gateway
 - [x] End to End Testing
 - [x] Architecture Diagram
 - [x] Updated Documentation
+- [ ] Update to AI Foundry 
+- [ ] Update to Agent Framework SDK
+- [ ] Add tracing to App Insights 
+- [ ] Move to Multi-agent workflow with an agent for image analysis and another for text generation
 - [ ] Update API to save image to blob storage and return URL in response
 - [ ] Update Front End to display image
-- [ ] Update Front End to display details of the OpenAI calls
+
 <p align="right">(<a href="#Introduction">Back to Top</a>)</p>
 
 # Navigation

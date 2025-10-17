@@ -128,7 +128,7 @@ tasks:
         --set WORKLOAD_ID.CLIENT_ID={{.WORKLOAD_CLIENT_ID}}
         --set WORKLOAD_ID.TENANT_ID={{.WORKLOAD_TENANT_ID}}        
         --set OPENAI.MODEL_NAME={{.MODEL_NAME}}
-        --set OPENAI.ENDPOINT={{.OPENAI_ENDPOINT}} ./charts/api > 
+        --set OPENAI.ENDPOINT={{.AZURE_AI_PROJECT_ENDPOINT}} ./charts/api > 
         ./cluster-config/api/components.yaml
       - git add ./cluster-config/api/components.yaml || true
       - git commit -m "[{{.DATE_TIME}}] - Updates for {{.TAG_NAME}} app 🤖🤖🤖 components" || true
@@ -145,8 +145,8 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw WORKLOAD_TENANT_ID
       ACR_NAME:
         sh: terraform -chdir=./infrastructure output -raw ACR_NAME
-      OPENAI_ENDPOINT:
-        sh: terraform -chdir=./infrastructure output -raw OPENAI_ENDPOINT     
+      AZURE_AI_PROJECT_ENDPOINT:
+        sh: terraform -chdir=./infrastructure output -raw AZURE_AI_PROJECT_ENDPOINT     
       COMMIT_VERSION:
         sh: git rev-parse HEAD | cut -c 1-8 
       DATE_TIME:

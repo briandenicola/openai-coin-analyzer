@@ -37,8 +37,8 @@ tasks:
     cmds: 
     - RIC_AOI_ENDPOINT={{.AOI_ENDPOINT}} dotnet run --no-build
     vars:
-      AOI_ENDPOINT: 123
-        #sh: terraform -chdir=../../infrastructure/simple output -raw OPENAI_ENDPOINT
+      AOI_ENDPOINT:
+        sh: terraform -chdir=../../infrastructure/simple output -raw AZURE_AI_PROJECT_ENDPOINT
 
   build:
     dir: ./src/api

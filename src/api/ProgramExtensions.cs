@@ -5,11 +5,17 @@ public static class ProgramExtensions
     private static DefaultAzureCredential credential = new DefaultAzureCredential();
     public static void AddSemanticKernelConfiguration( this WebApplicationBuilder builder )
     {
-        var skBuilder = Kernel.CreateBuilder();
-        skBuilder.AddAzureOpenAIChatCompletion(Constants.OPENAI_MODEL, Constants.OPENAI_ENDPOINT, credential);
-                    
-        var kernel = skBuilder.Build();
-        builder.Services.AddSingleton<Kernel>(kernel);
+        //var skBuilder = Kernel.CreateBuilder();
+        //skBuilder.AddAzureOpenAIChatCompletion(Constants.OPENAI_MODEL, Constants.OPENAI_ENDPOINT, credential);                    
+        //var kernel = skBuilder.Build();
+
+        AIAgent agent = new AzureOpenAIClient(
+            new Uri(Constants.OPENAI_ENDPOINT),
+            credential)
+            .GetChatClient(Constants.OPENAI_MODEL)
+            .CreateAIAgent(instructions: Constants.SYSTEM_PROMPT, name: "Numerologist Agent");
+
+        builder.Services.AddSingleton<AIAgent>(agent);
     }
 
     public static void AddCustomOtelConfiguration(

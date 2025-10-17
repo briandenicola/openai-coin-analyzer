@@ -16,9 +16,10 @@ global using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 global using Azure.Monitor.OpenTelemetry.AspNetCore;
 
-global using Microsoft.SemanticKernel;
-global using Microsoft.SemanticKernel.ChatCompletion;
-global using Microsoft.SemanticKernel.Connectors.OpenAI;
+global using Azure.AI.OpenAI;
+global using Microsoft.Agents.AI;
+global using Microsoft.Extensions.AI;
+global using OpenAI;
 
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
