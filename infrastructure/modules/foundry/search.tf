@@ -28,7 +28,7 @@ resource "azapi_resource" "ai_search" {
     }
   }
 
-  response_export_values = ["properties.endpoint"]
+  response_export_values = ["properties.endpoint", "identity.principalId"]
 }
 
 data "azapi_resource_action" "search_keys" {

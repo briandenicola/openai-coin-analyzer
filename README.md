@@ -50,12 +50,12 @@ Azure APIM Managment | API Gateway
 - [x] End to End Testing
 - [x] Architecture Diagram
 - [x] Updated Documentation
-- [ ] Update to AI Foundry 
-- [ ] Update to Agent Framework SDK
+- [x] Update to AI Foundry 
+- [x] Update to Agent Framework SDK
+- [ ] Move to Multi-agent Concurrent workflow example - Agent Service Connected Agents
+- [ ] Move to Multi-agent Concurrent workflow example - YAML defined agents
+- [ ] Implement Check Status and Return Results Methods
 - [ ] Add tracing to App Insights 
-- [ ] Move to Multi-agent workflow with an agent for image analysis and another for text generation
-- [ ] Update API to save image to blob storage and return URL in response
-- [ ] Update Front End to display image
 
 <p align="right">(<a href="#Introduction">Back to Top</a>)</p>
 

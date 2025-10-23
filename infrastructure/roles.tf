@@ -19,12 +19,6 @@ resource "azurerm_role_assignment" "ai_metric_publisher" {
   skip_service_principal_aad_check = true
 }
 
-resource "azurerm_role_assignment" "local_user_openai_user" {
-  scope                = module.foundry.FOUNDRY_RESOURCE_ID
-  role_definition_name = "Cognitive Services OpenAI User"
-  principal_id         = data.azurerm_client_config.current.object_id
-}
-
 resource "azurerm_role_assignment" "app_openai_user" {
   scope                = module.foundry.FOUNDRY_RESOURCE_ID
   role_definition_name = "Cognitive Services OpenAI User"
@@ -42,4 +36,3 @@ resource "azurerm_role_assignment" "storage_account_contributor" {
   role_definition_name = "Storage Account Contributor"
   principal_id         = data.azurerm_client_config.current.object_id
 }
-

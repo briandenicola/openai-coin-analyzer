@@ -1,60 +1,63 @@
 data "azurerm_cognitive_account" "this" {
-    depends_on          = [azapi_resource.foundry]
-    name                = local.ai_foundry_name
-  resource_group_name      = var.resource_group.name
-  
+  depends_on          = [azapi_resource.foundry]
+  name                = local.ai_foundry_name
+  resource_group_name = var.resource_group.name
+
 }
 
 data "azurerm_monitor_diagnostic_categories" "this" {
-    resource_id = data.azurerm_cognitive_account.this.id
+  resource_id = data.azurerm_cognitive_account.this.id
 }
 
 resource "azapi_resource" "foundry" {
-    type      = "Microsoft.CognitiveServices/accounts@2025-06-01"
-    name      = local.ai_foundry_name
-  parent_id      = var.resource_group.id
-  location                 = var.resource_group.location
+  type      = "Microsoft.CognitiveServices/accounts@2025-06-01"
+  name      = local.ai_foundry_name
+  parent_id = var.resource_group.id
+  location  = var.resource_group.location
 
 
-    identity {
-        type = "SystemAssigned, UserAssigned"
-        identity_ids = [
-            azurerm_user_assigned_identity.foundry_identity.id
-        ]
+  identity {
+    type = "SystemAssigned, UserAssigned"
+    identity_ids = [
+      azurerm_user_assigned_identity.foundry_identity.id
+    ]
+  }
+
+  body = {
+    sku = {
+      name = "S0"
+    },
+    kind = "AIServices",
+    properties = {
+      allowProjectManagement = true
+      customSubDomainName    = local.ai_foundry_name
+      publicNetworkAccess    = "Enabled"
     }
+  }
 
-    body = {
-        sku = {
-            name = "S0"
-        },
-        kind = "AIServices",
-        properties = {
-            allowProjectManagement = true
-            customSubDomainName    = local.ai_foundry_name
-            publicNetworkAccess    = "Enabled"
-        }
-    }
+  response_export_values = ["identity.principalId"]
+
 }
 
 resource "azurerm_monitor_diagnostic_setting" "this" {
-    count = var.log_analytics.deploy ? 1 : 0
-    depends_on = [
-        data.azurerm_monitor_diagnostic_categories.this
-    ]
+  count = var.log_analytics.deploy ? 1 : 0
+  depends_on = [
+    data.azurerm_monitor_diagnostic_categories.this
+  ]
 
-    name                       = "diag"
-    target_resource_id         = data.azurerm_cognitive_account.this.id
-    log_analytics_workspace_id = var.log_analytics.workspace_id
+  name                       = "diag"
+  target_resource_id         = data.azurerm_cognitive_account.this.id
+  log_analytics_workspace_id = var.log_analytics.workspace_id
 
-    dynamic "enabled_log" {
-        for_each = toset(data.azurerm_monitor_diagnostic_categories.this.log_category_types)
-        content {
-            category = enabled_log.value
-        }
+  dynamic "enabled_log" {
+    for_each = toset(data.azurerm_monitor_diagnostic_categories.this.log_category_types)
+    content {
+      category = enabled_log.value
     }
+  }
 
-    enabled_metric {
-        category = "AllMetrics"
-    }
+  enabled_metric {
+    category = "AllMetrics"
+  }
 }
 
