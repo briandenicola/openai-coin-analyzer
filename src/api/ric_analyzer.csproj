@@ -26,7 +26,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.4" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.48.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />    
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="11.0.0" />    
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.48.0" />    
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.48.0" />    
     <PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.48.0-alpha" />    
